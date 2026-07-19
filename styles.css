@@ -82,37 +82,16 @@ body {
     min-height: 100vh;
 }
 
-/* Fullscreen HLS Video Background System */
-.video-bg-container {
+/* High-End Gold & Aqua Blue Floating Particle Canvas Background */
+#ambient-canvas, .ambient-canvas {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -2;
-    overflow: hidden;
+    z-index: -1;
     pointer-events: none;
     background-color: #000000;
-}
-
-.hls-bg-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    opacity: 0.55;
-}
-
-.video-blend-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #e6b800 0%, #0052cc 60%, #000000 100%);
-    mix-blend-mode: overlay;
-    opacity: 0.88;
-    pointer-events: none;
 }
 
 /* Main Content Layer Isolation */

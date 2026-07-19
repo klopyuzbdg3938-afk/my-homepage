@@ -3,7 +3,7 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initHLSVideoBackground();
+    initAmbientCanvas();
     initThemeToggle();
     initEnergySimulatorGame();
     initLetterCards();
@@ -11,77 +11,109 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. Full-Screen HLS Video Streaming Background Engine (hls.js)
+   1. High-End Gold & Aqua Blue Floating Particle Canvas Engine (Flicker-Free)
    -------------------------------------------------------------------------- */
-function initHLSVideoBackground() {
-    const video = document.getElementById('hls-bg-video');
-    if (!video) {
-        console.error('[HLS Video Error] #hls-bg-video element not found in DOM');
-        return;
+function initAmbientCanvas() {
+    const canvas = document.getElementById('ambient-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    // Canvas size initialization strictly OUTSIDE animation loop
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    // Resize listener strictly OUTSIDE animation loop
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const particleCount = 100;
+    const particles = [];
+
+    // Noble Gold (#FFD700 / #E6B800) & Tech Deep Blue (#00BFFF / #0066FF)
+    const goldColors = ['#FFD700', '#E6B800', '#FCE896'];
+    const blueColors = ['#00BFFF', '#38BDF8', '#0066FF'];
+
+    for (let i = 0; i < particleCount; i++) {
+        const isGold = Math.random() > 0.45;
+        const colorPalette = isGold ? goldColors : blueColors;
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 1.5 + 0.5,
+            color: colorPalette[Math.floor(Math.random() * colorPalette.length)],
+            baseAlpha: Math.random() * 0.45 + 0.35,
+            pulseSpeed: Math.random() * 0.02 + 0.008,
+            pulsePhase: Math.random() * Math.PI * 2,
+            vx: (Math.random() - 0.5) * 0.22, // Slow, peaceful, high-end movement
+            vy: (Math.random() - 0.5) * 0.22 - 0.04
+        });
     }
 
-    // Force muted & volume 0 to pass strict browser autoplay policies
-    video.muted = true;
-    video.volume = 0;
+    function render() {
+        requestAnimationFrame(render);
 
-    const videoSrc = 'https://stream.mux.com/kimF2ha9zLrX64H00UgLGPflCzNtl1T0215MlAmeOztv8.m3u8';
+        // Clear canvas with pitch black (#000000)
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, width, height);
 
-    video.onerror = function (e) {
-        console.error('[HLS Native Video Tag Error]', video.error || e);
-    };
+        // Draw Constellation Connection Lines
+        for (let i = 0; i < particleCount; i++) {
+            const p1 = particles[i];
+            for (let j = i + 1; j < particleCount; j++) {
+                const p2 = particles[j];
+                const dx = p1.x - p2.x;
+                const dy = p1.y - p2.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-        console.log('[HLS.js Status] Hls.isSupported() is TRUE. Loading stream...');
-        const hls = new Hls({
-            enableWorker: true,
-            lowLatencyMode: true,
-            backBufferLength: 90
-        });
-        hls.loadSource(videoSrc);
-        hls.attachMedia(video);
-
-        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-            console.log('[HLS.js Status] Manifest parsed successfully with levels:', data.levels);
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('[HLS.js Success] Background HLS video playing smoothly!');
-                }).catch(err => {
-                    console.warn('[HLS.js Autoplay Warning] Autoplay blocked, forcing muted play:', err);
-                    video.muted = true;
-                    video.play().catch(e => console.error('[HLS.js Play Error]', e));
-                });
-            }
-        });
-
-        hls.on(Hls.Events.ERROR, function (event, data) {
-            console.error('[HLS.js Event Error]', data.type, data.details, data);
-            if (data.fatal) {
-                switch (data.type) {
-                    case Hls.ErrorTypes.NETWORK_ERROR:
-                        console.error('[HLS.js Fatal] Network error. Attempting startLoad()...');
-                        hls.startLoad();
-                        break;
-                    case Hls.ErrorTypes.MEDIA_ERROR:
-                        console.error('[HLS.js Fatal] Media error. Attempting recoverMediaError()...');
-                        hls.recoverMediaError();
-                        break;
-                    default:
-                        console.error('[HLS.js Fatal] Unrecoverable error. Destroying instance.');
-                        hls.destroy();
-                        break;
+                if (dist < 110) {
+                    const lineAlpha = (1 - dist / 110) * 0.14 * p1.baseAlpha;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.strokeStyle = p1.color;
+                    ctx.globalAlpha = lineAlpha;
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                    ctx.restore();
                 }
             }
-        });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        console.log('[Safari Native HLS Status] Using native browser HLS engine...');
-        video.src = videoSrc;
-        video.addEventListener('loadedmetadata', function () {
-            video.play().catch(err => console.error('[Safari Native HLS Play Error]', err));
-        });
-    } else {
-        console.error('[HLS Video Fatal] Neither hls.js nor native HLS is supported by this browser.');
+        }
+
+        // Draw Floating Particles
+        for (let i = 0; i < particleCount; i++) {
+            const p = particles[i];
+
+            // Update position
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Boundary wrapping
+            if (p.x < -10) p.x = width + 10;
+            if (p.x > width + 10) p.x = -10;
+            if (p.y < -10) p.y = height + 10;
+            if (p.y > height + 10) p.y = -10;
+
+            // Breathing pulse effect
+            p.pulsePhase += p.pulseSpeed;
+            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.2;
+            const clampAlpha = Math.max(0.1, Math.min(0.85, currentAlpha));
+
+            ctx.save();
+            ctx.globalAlpha = clampAlpha;
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = p.radius * 5;
+            ctx.shadowColor = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
     }
+
+    render();
 }
 
 /* --------------------------------------------------------------------------
