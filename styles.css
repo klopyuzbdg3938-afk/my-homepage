@@ -1355,4 +1355,73 @@ section {
     letter-spacing: 0.15em;
 }
 
+/* ============================================================
+   Particle Gather Counter Badge (固定粒子聚拢计数徽章)
+   ============================================================ */
+#particle-counter {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: rgba(12, 18, 30, 0.78);
+    border: 1px solid rgba(223, 183, 108, 0.28);
+    border-radius: 99px;
+    padding: 0.42rem 1.1rem 0.42rem 0.85rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55), inset 0 0 12px rgba(223, 183, 108, 0.04);
+    pointer-events: none;
+    user-select: none;
+    font-family: 'Noto Serif SC', serif;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
 
+#particle-counter.active {
+    border-color: rgba(96, 165, 250, 0.45);
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.55), 0 0 18px rgba(96, 165, 250, 0.12);
+}
+
+.counter-icon {
+    font-size: 0.68rem;
+    color: #dfb76c;
+    opacity: 0.75;
+    line-height: 1;
+}
+
+#particle-counter-num {
+    font-family: 'Cormorant Garamond', 'Cinzel', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #dfb76c;
+    min-width: 2.2ch;
+    text-align: center;
+    display: inline-block;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+#particle-counter-num.active-num {
+    color: #60a5fa;
+    text-shadow: 0 0 12px rgba(96, 165, 250, 0.5);
+}
+
+#particle-counter-num.bounce {
+    animation: counterBounce 0.32s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes counterBounce {
+    0%   { transform: scale(1) translateY(0); }
+    35%  { transform: scale(1.45) translateY(-5px); }
+    65%  { transform: scale(0.88) translateY(1px); }
+    100% { transform: scale(1) translateY(0); }
+}
+
+.counter-label {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.38);
+    letter-spacing: 0.12em;
+    line-height: 1;
+}

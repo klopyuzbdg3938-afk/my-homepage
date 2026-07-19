@@ -65,6 +65,9 @@ function initAmbientCanvas() {
     let waveDistAccum = 0;
     const WAVE_EMIT_DIST = 80; // 每移动 80px 触发一次水波
 
+    // 粒子计数器帧跳过计数
+    let counterFrameSkip = 0;
+
     const particleCount = 360; // 360 Master 3D Parallax Multi-Tiered Starfield Nodes
     const particles = [];
 
@@ -345,6 +348,41 @@ function initAmbientCanvas() {
             ctx.strokeStyle = `rgba(223, 183, 108, ${wave.alpha * 0.4})`;
             ctx.stroke();
             ctx.restore();
+        }
+
+        // === 粒子聚拢计数器 (每8帧更新一次DOM，避免性能损耗) ===
+        counterFrameSkip++;
+        if (counterFrameSkip >= 8) {
+            counterFrameSkip = 0;
+            let gathered = 0;
+            if (mousePos.active) {
+                for (let i = 0; i < particleCount; i++) {
+                    const p = particles[i];
+                    const dx = mousePos.x - p.x;
+                    const dy = mousePos.y - p.y;
+                    if (dx * dx + dy * dy < 280 * 280) gathered++;
+                }
+            }
+            const numEl = document.getElementById('particle-counter-num');
+            const badgeEl = document.getElementById('particle-counter');
+            if (numEl) {
+                const prev = parseInt(numEl.textContent) || 0;
+                if (prev !== gathered) {
+                    numEl.textContent = gathered;
+                    // Bounce animation on change
+                    numEl.classList.remove('bounce');
+                    void numEl.offsetWidth; // force reflow
+                    numEl.classList.add('bounce');
+                }
+                // Active state: blue when gathering, gold when 0
+                if (gathered > 0) {
+                    numEl.classList.add('active-num');
+                    badgeEl && badgeEl.classList.add('active');
+                } else {
+                    numEl.classList.remove('active-num');
+                    badgeEl && badgeEl.classList.remove('active');
+                }
+            }
         }
     }
 
