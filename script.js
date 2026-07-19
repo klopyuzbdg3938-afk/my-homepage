@@ -11,10 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. Ultra-Minimalist Parallel Quantum Stream Engine (Clean, Orderly & Spacious)
-      - Strict particle limit (35 count for generous pure-black negative space)
-      - Controlled silk trail fade (rgba(0,0,0,0.045) prevents line accumulation)
-      - Parallel Laminar Flow (coherent stream vectors, zero tangling or mess)
+   1. High-Definition Parallel Fiber Stream Engine (Vibrant, Crisp & Orderly)
+      - 65 particles for crisp, spacious, high-visibility flow
+      - 1px ~ 1.5px thickness & 0.5 ~ 0.7 high opacity for optical fiber clarity
+      - Trail fade: rgba(0, 0, 0, 0.025) for smooth long parallel streams
+      - Vibrant Amber Gold (#FFB700) & Aurora Neon Blue (#00E5FF)
    -------------------------------------------------------------------------- */
 function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas');
@@ -31,26 +32,26 @@ function initAmbientCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    const particleCount = 35; // Strict limit: 35 particles for clean negative space
+    const particleCount = 65; // Crisp visibility + generous negative space
     const particles = [];
 
-    // Noble Gold (#FFD700 / #E6B800) & Tech Aqua (#38BDF8 / #0284C7)
-    const goldColors = ['rgba(255, 215, 0, ', 'rgba(230, 184, 0, '];
-    const blueColors = ['rgba(56, 189, 248, ', 'rgba(2, 132, 199, '];
+    // Vibrant Amber Gold (#FFB700) & Aurora Neon Blue (#00E5FF)
+    const goldColors = ['rgba(255, 183, 0, ', 'rgba(255, 200, 0, '];
+    const blueColors = ['rgba(0, 229, 255, ', 'rgba(56, 189, 248, '];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
         const colorPalette = isGold ? goldColors : blueColors;
         const colorBase = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-        const alpha = Math.random() * 0.12 + 0.12; // Subtle translucent 0.12 ~ 0.24 opacity
+        const alpha = Math.random() * 0.2 + 0.5; // Crisp high opacity 0.5 ~ 0.7
 
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 0.2 + 0.3, // Ultra-fine thickness (0.3px ~ 0.5px)
+            radius: Math.random() * 0.5 + 1.0, // Clear 1.0px ~ 1.5px thickness
             colorBase: colorBase,
             alpha: alpha,
-            speed: isGold ? (Math.random() * 0.7 + 0.8) : (Math.random() * 0.5 + 0.5),
+            speed: isGold ? (Math.random() * 0.8 + 0.9) : (Math.random() * 0.6 + 0.6),
             isGold: isGold
         });
     }
@@ -61,15 +62,15 @@ function initAmbientCanvas() {
         requestAnimationFrame(render);
         time += 0.003;
 
-        // Controlled Trail Fade (0.045 clears old trails quickly, leaving pitch black space)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.045)';
+        // Smooth Long Trail Fade (0.025 preserves long smooth optical fiber lines)
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.025)';
         ctx.fillRect(0, 0, width, height);
 
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Parallel Laminar Flow Angle (Smooth parallel stream vectors, zero tangling)
-            const angle = Math.PI * 0.12 + Math.sin(p.y * 0.0012 + time) * 0.12;
+            // Coherent Parallel Stream Angle (15 degrees parallel sweep)
+            const angle = Math.PI * 0.12 + Math.sin(p.y * 0.0012 + time) * 0.1;
             const vx = Math.cos(angle) * p.speed;
             const vy = Math.sin(angle) * p.speed;
 
@@ -77,26 +78,27 @@ function initAmbientCanvas() {
             p.y += vy;
 
             // Screen boundary wrapping
-            if (p.x > width + 40) {
-                p.x = -40;
+            if (p.x > width + 50) {
+                p.x = -50;
                 p.y = Math.random() * height;
             }
-            if (p.y > height + 40) {
-                p.y = -40;
+            if (p.y > height + 50) {
+                p.y = -50;
                 p.x = Math.random() * width;
             }
 
-            // Dynamic Vector Linear Gradient (Aqua Blue -> Jewelry Gold)
+            // Dynamic Vector Linear Gradient (Vibrant Amber Gold & Aurora Blue)
             if (Math.abs(vx) > 0.01 && Math.abs(vy) > 0.01) {
-                const grad = ctx.createLinearGradient(p.x, p.y, p.x - vx * 12, p.y - vy * 12);
+                const grad = ctx.createLinearGradient(p.x, p.y, p.x - vx * 14, p.y - vy * 14);
                 grad.addColorStop(0, `${p.colorBase}${p.alpha})`);
+                grad.addColorStop(0.7, `${p.colorBase}${p.alpha * 0.5})`);
                 grad.addColorStop(1, `${p.colorBase}0)`);
                 ctx.fillStyle = grad;
             } else {
                 ctx.fillStyle = `${p.colorBase}${p.alpha})`;
             }
 
-            // Draw ultra-fine line head
+            // Draw crisp optical fiber node
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fill();
