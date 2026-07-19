@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
     initEnergySimulatorGame();
     initLetterCards();
-    initMobileMenu();
 });
 
 /* --------------------------------------------------------------------------
@@ -298,9 +297,8 @@ function initEnergySimulatorGame() {
         mouse.active = false;
     });
 
-    // Mobile degradation detection
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-    const particleMax = isMobileDevice ? 20 : 40;
+    // Desktop High-Performance Particle System
+    const particleMax = 40;
     const particles = [];
     const splashes = [];
 
@@ -695,38 +693,6 @@ function showToast(message) {
     }, 3500);
 }
 
-/* --------------------------------------------------------------------------
-   7. Mobile Navigation H5 Drawer Logic
-   -------------------------------------------------------------------------- */
-function initMobileMenu() {
-    const toggleBtn = document.getElementById('mobile-menu-toggle');
-    const drawer = document.getElementById('mobile-nav-drawer');
-    const closeBtn = document.getElementById('mobile-drawer-close');
-    if (!toggleBtn || !drawer) return;
 
-    function openDrawer() {
-        drawer.style.display = 'flex';
-        setTimeout(() => drawer.classList.add('active'), 10);
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeDrawer() {
-        drawer.classList.remove('active');
-        setTimeout(() => {
-            if (!drawer.classList.contains('active')) {
-                drawer.style.display = 'none';
-            }
-        }, 300);
-        document.body.style.overflow = '';
-    }
-
-    toggleBtn.addEventListener('click', openDrawer);
-    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-
-    const drawerLinks = drawer.querySelectorAll('.drawer-link, .btn-drawer-action');
-    drawerLinks.forEach(link => {
-        link.addEventListener('click', closeDrawer);
-    });
-}
 
 
