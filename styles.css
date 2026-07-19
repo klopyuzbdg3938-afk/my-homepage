@@ -251,25 +251,26 @@ main {
 .hero-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.35rem 1.4rem;
+    gap: 0.75rem;
+    padding: 0.5rem 1.6rem;
     border-radius: var(--radius-full);
-    background: rgba(223, 183, 108, 0.06);
-    border: 1px solid rgba(223, 183, 108, 0.22);
-    color: var(--gold-primary);
-    font-size: 11px;
-    font-weight: 300;
+    background: rgba(223, 183, 108, 0.1);
+    border: 1px solid rgba(223, 183, 108, 0.38);
+    color: #f3e7c4;
+    font-size: 13.5px;
+    font-weight: 500;
     font-family: var(--font-body);
-    letter-spacing: 0.4em;
+    letter-spacing: 0.22em;
     margin-bottom: 2.2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .badge-dot {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
     background-color: var(--gold-primary);
     border-radius: 50%;
-    box-shadow: none;
+    box-shadow: 0 0 8px rgba(223, 183, 108, 0.6);
     animation: pulseGlow 2s infinite alternate;
 }
 
