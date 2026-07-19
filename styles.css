@@ -35,8 +35,8 @@
     --text-gold: #dfb76c;
     --text-aqua: #60a5fa;
 
-    /* Fonts - Noto Serif SC Literary Aesthetic */
-    --font-heading: 'Noto Serif SC', 'Cinzel', serif;
+    /* Fonts - Luxury Roman Serif & Noto Serif SC Literary Aesthetic */
+    --font-heading: 'Cormorant Garamond', 'Cinzel Decorative', 'Cinzel', serif;
     --font-body: 'Noto Serif SC', serif;
     --font-sans: 'Noto Serif SC', serif;
 
@@ -282,9 +282,10 @@ main {
 }
 
 .hero-title {
-    font-family: var(--font-heading);
-    font-size: clamp(4rem, 10vw, 7.5rem);
-    letter-spacing: 0.1em;
+    font-family: 'Cormorant Garamond', 'Cinzel Decorative', serif;
+    font-size: clamp(4.5rem, 11vw, 8rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
     margin-bottom: 1.2rem;
     display: flex;
     justify-content: center;
