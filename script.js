@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
     initEnergySimulatorGame();
     initLetterCards();
+    initMobileMenu();
 });
 
 /* --------------------------------------------------------------------------
@@ -295,13 +296,20 @@ function initEnergySimulatorGame() {
     });
 
     // Touch support
-    container.addEventListener('touchmove', (e) => {
-        if (e.touches.length > 0) {
+    function handleTouch(e) {
+        if (e.touches && e.touches.length > 0) {
             const rect = container.getBoundingClientRect();
             mouse.x = e.touches[0].clientX - rect.left;
             mouse.y = e.touches[0].clientY - rect.top;
             mouse.active = true;
+            if (simHint) simHint.classList.add('fade-out');
         }
+    }
+
+    container.addEventListener('touchstart', handleTouch, { passive: true });
+    container.addEventListener('touchmove', handleTouch, { passive: true });
+    container.addEventListener('touchend', () => {
+        mouse.active = false;
     });
 
     // Particles array
@@ -676,4 +684,47 @@ function showToast(message) {
         toast.style.transform = 'translateY(100px)';
         toast.style.opacity = '0';
     }, 3500);
+}
+
+/* --------------------------------------------------------------------------
+   7. Mobile Navigation H5 Drawer Logic
+   -------------------------------------------------------------------------- */
+function initMobileMenu() {
+    const toggleBtn = document.getElementById('mobile-menu-toggle');
+    const mainNav = document.querySelector('.main-nav');
+    if (!toggleBtn || !mainNav) return;
+
+    // Create backdrop if not exists
+    let backdrop = document.querySelector('.nav-backdrop');
+    if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'nav-backdrop';
+        document.body.appendChild(backdrop);
+    }
+
+    function toggleMenu() {
+        const isOpen = mainNav.classList.contains('mobile-active');
+        if (isOpen) {
+            mainNav.classList.remove('mobile-active');
+            backdrop.classList.remove('active');
+            toggleBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        } else {
+            mainNav.classList.add('mobile-active');
+            backdrop.classList.add('active');
+            toggleBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        }
+    }
+
+    toggleBtn.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', toggleMenu);
+
+    // Close menu when clicking nav links
+    const navLinks = mainNav.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (mainNav.classList.contains('mobile-active')) {
+                toggleMenu();
+            }
+        });
+    });
 }
