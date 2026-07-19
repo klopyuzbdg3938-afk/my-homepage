@@ -3,42 +3,42 @@
    ========================================================================== */
 
 :root {
-    /* Color Tokens */
-    --bg-dark: #0B0E14;
+    /* Color Tokens - High-End Chinese Literary Serif Aesthetic */
+    --bg-dark: #000000;
     --bg-card: rgba(18, 24, 38, 0.65);
     --bg-card-hover: rgba(28, 37, 56, 0.8);
     --border-glass: rgba(255, 255, 255, 0.08);
-    --border-gold: rgba(212, 175, 55, 0.3);
-    --border-aqua: rgba(56, 189, 248, 0.3);
+    --border-gold: rgba(223, 183, 108, 0.25);
+    --border-aqua: rgba(92, 122, 149, 0.3);
 
-    /* Accents - Gold (金) */
-    --gold-primary: #D4AF37;
-    --gold-light: #FCE896;
-    --gold-dark: #9A7B1C;
-    --gold-gradient: linear-gradient(135deg, #FFF2B2 0%, #D4AF37 50%, #9A7B1C 100%);
-    --gold-shadow: rgba(212, 175, 55, 0.25);
+    /* Accents - Ancient Matte Gold (古法哑光金 / 浅禾色) */
+    --gold-primary: #dfb76c;
+    --gold-light: #e5c185;
+    --gold-dark: #b8934b;
+    --gold-gradient: linear-gradient(135deg, #e5c185 0%, #dfb76c 50%, #b8934b 100%);
+    --gold-shadow: rgba(223, 183, 108, 0.12);
 
-    /* Accents - Water (水 / Aqua) */
-    --aqua-primary: #38BDF8;
-    --aqua-light: #BAE6FD;
-    --aqua-deep: #0284C7;
-    --water-gradient: linear-gradient(135deg, #7DD3FC 0%, #38BDF8 50%, #0369A1 100%);
-    --aqua-shadow: rgba(56, 189, 248, 0.25);
+    /* Accents - Deep Indigo / Aqua (深邃黛蓝 / 霁蓝色) */
+    --aqua-primary: #5c7a95;
+    --aqua-light: #8faec7;
+    --aqua-deep: #38566e;
+    --water-gradient: linear-gradient(135deg, #8faec7 0%, #5c7a95 50%, #38566e 100%);
+    --aqua-shadow: rgba(92, 122, 149, 0.12);
 
     /* Accents - Elderly Care Warmth */
-    --care-teal: #2DD4BF;
-    --care-rose: #FB7185;
+    --care-teal: #4b738e;
+    --care-rose: #dfb76c;
 
     /* Text Colors */
-    --text-main: #F1F5F9;
-    --text-muted: #94A3B8;
-    --text-gold: #FBE68A;
-    --text-aqua: #7DD3FC;
+    --text-main: rgba(255, 255, 255, 0.78);
+    --text-muted: rgba(255, 255, 255, 0.52);
+    --text-gold: #dfb76c;
+    --text-aqua: #8faec7;
 
-    /* Fonts */
-    --font-heading: 'Cinzel', 'Plus Jakarta Sans', serif;
-    --font-body: 'Noto Serif SC', 'Plus Jakarta Sans', -apple-system, sans-serif;
-    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    /* Fonts - Noto Serif SC Literary Aesthetic */
+    --font-heading: 'Noto Serif SC', 'Cinzel', serif;
+    --font-body: 'Noto Serif SC', serif;
+    --font-sans: 'Noto Serif SC', serif;
 
     /* Transitions & Radius */
     --radius-sm: 8px;
@@ -251,40 +251,42 @@ main {
 .hero-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 1.2rem;
+    gap: 0.6rem;
+    padding: 0.35rem 1.4rem;
     border-radius: var(--radius-full);
-    background: rgba(56, 189, 248, 0.1);
-    border: 1px solid var(--border-aqua);
-    color: var(--aqua-primary);
-    font-size: 0.85rem;
-    font-family: var(--font-sans);
-    margin-bottom: 2rem;
+    background: rgba(223, 183, 108, 0.06);
+    border: 1px solid rgba(223, 183, 108, 0.22);
+    color: var(--gold-primary);
+    font-size: 11px;
+    font-weight: 300;
+    font-family: var(--font-body);
+    letter-spacing: 0.4em;
+    margin-bottom: 2.2rem;
 }
 
 .badge-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--aqua-primary);
+    width: 5px;
+    height: 5px;
+    background-color: var(--gold-primary);
     border-radius: 50%;
-    box-shadow: 0 0 10px var(--aqua-primary);
+    box-shadow: none;
     animation: pulseGlow 2s infinite alternate;
 }
 
 @keyframes pulseGlow {
-    0% { opacity: 0.4; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1.2); }
+    0% { opacity: 0.3; transform: scale(0.9); }
+    100% { opacity: 0.9; transform: scale(1.1); }
 }
 
 .hero-title {
     font-family: var(--font-heading);
     font-size: clamp(4rem, 10vw, 7.5rem);
-    letter-spacing: 0.25em;
-    margin-bottom: 1rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.2rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.1em;
+    gap: 0.08em;
 }
 
 .hero-title span {
@@ -295,51 +297,56 @@ main {
 
 .char-g {
     color: var(--gold-primary);
-    text-shadow: 0 0 35px var(--gold-shadow);
+    text-shadow: none;
 }
 
 .char-s {
-    color: #E2E8F0;
+    color: rgba(255, 255, 255, 0.82);
+    text-shadow: none;
 }
 
 .char-u1, .char-u2 {
     color: var(--aqua-primary);
-    text-shadow: 0 0 30px var(--aqua-shadow);
+    text-shadow: none;
     transform: translateY(-2px);
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .char-u1:hover, .char-u2:hover {
-    transform: translateY(-8px) scale(1.1);
-    color: #7DD3FC;
+    transform: translateY(-6px) scale(1.05);
+    color: var(--aqua-light);
 }
 
 .char-x {
     color: var(--gold-primary);
-    text-shadow: 0 0 35px var(--gold-shadow);
+    text-shadow: none;
 }
 
 .hero-subtitle {
-    font-size: 1.4rem;
-    font-family: var(--font-sans);
-    font-weight: 500;
-    color: var(--text-muted);
-    letter-spacing: 0.12em;
-    margin-bottom: 2rem;
+    font-size: 1.25rem;
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.78);
+    letter-spacing: 0.3em;
+    margin-bottom: 2.2rem;
 }
 
-.hero-subtitle span {
+.hero-subtitle .sym-sep {
     color: var(--gold-primary);
-    margin: 0 0.5rem;
+    font-size: 0.95rem;
+    margin: 0 0.6rem;
+    opacity: 0.85;
 }
 
 .hero-description {
-    font-size: 1.15rem;
-    color: #CBD5E1;
-    max-width: 720px;
-    margin: 0 auto 3rem;
-    line-height: 1.9;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.72);
+    max-width: 760px;
+    margin: 0 auto 3.2rem;
+    line-height: 2.0;
+    letter-spacing: 0.08em;
     font-weight: 300;
+    font-family: var(--font-body);
 }
 
 .hero-actions {
