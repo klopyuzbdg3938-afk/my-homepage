@@ -14,14 +14,17 @@
     <!-- FontAwesome Font Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Three.js for 60fps 3D Gold + Water Blue Liquid Wave Shader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- HLS.js for Streaming Video Background -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-    <link rel="stylesheet" href="styles.css?v=20260719_v14">
+    <link rel="stylesheet" href="styles.css?v=20260719_v15">
 </head>
 <body class="theme-balance">
-    <!-- Single Unified 3D WebGL Background Canvas (Waves + Particles 60fps) -->
-    <canvas id="ambient-canvas" class="ambient-canvas"></canvas>
+    <!-- Fullscreen HLS Video Background & Tech Gold+Blue Blend Overlay -->
+    <div class="video-bg-container">
+        <video id="hls-bg-video" autoplay muted loop playsinline class="hls-bg-video"></video>
+        <div class="video-blend-overlay"></div>
+    </div>
 
     <!-- Navigation Header -->
     <header class="site-header">
@@ -411,6 +414,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=20260719_v14"></script>
+    <script src="script.js?v=20260719_v15"></script>
 </body>
 </html>

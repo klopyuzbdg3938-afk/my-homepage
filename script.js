@@ -3,7 +3,7 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initUnified3DScene();
+    initHLSVideoBackground();
     initThemeToggle();
     initEnergySimulatorGame();
     initLetterCards();
@@ -11,150 +11,31 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. Full-Screen WebGL Shader Engine: Gold + Water Blue Fluid (Flicker-Free)
+   1. Full-Screen HLS Video Streaming Background Engine (hls.js)
    -------------------------------------------------------------------------- */
-function initUnified3DScene() {
-    const canvas = document.getElementById('ambient-canvas');
-    if (!canvas || typeof THREE === 'undefined') return;
+function initHLSVideoBackground() {
+    const video = document.getElementById('hls-bg-video');
+    if (!video) return;
 
-    // Set canvas dimensions strictly OUTSIDE animation loop
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    canvas.width = w;
-    canvas.height = h;
+    const videoSrc = 'https://stream.mux.com/kimF2ha9zLrX64H00UgLGPflCzNtl1T0215MlAmeOztv8.m3u8';
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-    const renderer = new THREE.WebGLRenderer({
-        canvas: canvas,
-        alpha: true,
-        antialias: false,
-        powerPreference: "high-performance"
-    });
-    renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    // Window resize handler strictly OUTSIDE animation loop
-    window.addEventListener('resize', () => {
-        const rw = window.innerWidth;
-        const rh = window.innerHeight;
-        canvas.width = rw;
-        canvas.height = rh;
-        renderer.setSize(rw, rh);
-        if (material && material.uniforms.uResolution) {
-            material.uniforms.uResolution.value.set(rw, rh);
-        }
-    });
-
-    // Full-Screen Quad Vertex Shader (0 vertex clipping, 0 flickering)
-    const vertexShader = `
-        varying vec2 vUv;
-        void main() {
-            vUv = uv;
-            gl_Position = vec4(position.xy, 0.0, 1.0);
-        }
-    `;
-
-    // High-Performance Gold (#D4AF37) + Water Blue (#38BDF8) Fragment Shader
-    const fragmentShader = `
-        uniform float uTime;
-        uniform vec2 uResolution;
-        varying vec2 vUv;
-
-        vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-        vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-        vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
-        float snoise(vec2 v) {
-            const vec4 C = vec4(0.211324865405187, 0.366025403784439,
-                               -0.577350269189626, 0.024390243902439);
-            vec2 i  = floor(v + dot(v, C.yy) );
-            vec2 x0 = v - i + dot(i, C.xx);
-            vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-            vec4 x12 = x0.xyxy + C.xxzz;
-            x12.xy -= i1;
-            i = mod289(i);
-            vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-                + i.x + vec3(0.0, i1.x, 1.0 ));
-            vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-            m = m*m; m = m*m;
-            vec3 x = 2.0 * fract(p * C.www) - 1.0;
-            vec3 h = abs(x) - 0.5;
-            vec3 ox = floor(x + 0.5);
-            vec3 a0 = x - ox;
-            m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-            vec3 g;
-            g.x  = a0.x  * x0.x  + h.x  * x0.y;
-            g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-            return 130.0 * dot(m, g);
-        }
-
-        void main() {
-            vec2 st = (gl_FragCoord.xy - 0.5 * uResolution.xy) / min(uResolution.x, uResolution.y);
-
-            // Flowing fluid waves
-            float n1 = snoise(st * 1.4 + vec2(uTime * 0.07, uTime * 0.04));
-            float n2 = snoise(st * 2.8 - vec2(uTime * 0.05, n1 * 0.4));
-            float n3 = snoise(st * 4.5 + vec2(n2 * 0.3, uTime * 0.08));
-
-            vec3 colorDark = vec3(0.04, 0.05, 0.08);     // #0B0E14
-            vec3 colorBlue = vec3(0.06, 0.28, 0.48);     // Deep Aqua
-            vec3 colorAqua = vec3(0.22, 0.74, 0.97);     // #38BDF8
-            vec3 colorGold = vec3(0.83, 0.68, 0.21);     // #D4AF37
-            vec3 colorGoldLight = vec3(0.98, 0.91, 0.58);// #FCE896
-
-            float wavePattern = smoothstep(-0.6, 0.6, n1 + n2 * 0.4);
-            vec3 bgWave = mix(colorDark, colorBlue, wavePattern * 0.55);
-
-            float goldVein = smoothstep(0.2, 0.8, sin(st.x * 2.2 + n2 * 1.8 + uTime * 0.12) * 0.5 + 0.5 + n3 * 0.25);
-            vec3 finalColor = mix(bgWave, colorGold, goldVein * 0.45);
-
-            float sheen = pow(max(0.0, n2 + 0.25), 3.0) * 0.4;
-            finalColor += colorGoldLight * sheen;
-
-            // Ambient glowing particles inside shader (0 draw call overhead)
-            for (int i = 0; i < 14; i++) {
-                float fi = float(i);
-                vec2 pPos = vec2(
-                    sin(fi * 1.4 + uTime * 0.12) * 0.85,
-                    cos(fi * 1.8 + uTime * 0.10) * 0.65
-                );
-                float pDist = length(st - pPos);
-                float pGlow = smoothstep(0.045, 0.0, pDist);
-                vec3 pColor = (mod(fi, 2.0) == 0.0) ? colorGoldLight : colorAqua;
-                finalColor += pColor * pGlow * 0.55;
-            }
-
-            gl_FragColor = vec4(finalColor, 0.85);
-        }
-    `;
-
-    const geometry = new THREE.PlaneGeometry(2, 2);
-    const material = new THREE.ShaderMaterial({
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-        uniforms: {
-            uTime: { value: 0 },
-            uResolution: { value: new THREE.Vector2(w, h) }
-        },
-        depthWrite: false,
-        depthTest: false
-    });
-
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-
-    const clock = new THREE.Clock();
-
-    // Pure draw loop: NO canvas resizing, NO Shader/Program creation
-    function animate() {
-        requestAnimationFrame(animate);
-        material.uniforms.uTime.value = clock.getElapsedTime();
-        renderer.render(scene, camera);
+    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        const hls = new Hls({
+            enableWorker: true,
+            lowLatencyMode: true
+        });
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+            video.play().catch(e => console.log('Autoplay prevented:', e));
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // Native HLS support (Safari iOS/macOS)
+        video.src = videoSrc;
+        video.addEventListener('loadedmetadata', function () {
+            video.play().catch(e => console.log('Autoplay prevented:', e));
+        });
     }
-
-    animate();
 }
 
 /* --------------------------------------------------------------------------

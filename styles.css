@@ -82,19 +82,34 @@ body {
     min-height: 100vh;
 }
 
-/* GPU Hardware Accelerated Canvas Background */
-#ambient-canvas, .ambient-canvas {
+/* Fullscreen HLS Video Background System */
+.video-bg-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1;
+    z-index: -2;
+    overflow: hidden;
     pointer-events: none;
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    background-color: var(--bg-dark);
+}
+
+.hls-bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+    filter: brightness(0.85) contrast(1.15);
+}
+
+.video-blend-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 40% 30%, rgba(212, 175, 55, 0.28) 0%, transparent 65%),
+                linear-gradient(135deg, rgba(11, 14, 20, 0.75) 0%, rgba(2, 132, 199, 0.35) 50%, rgba(11, 14, 20, 0.85) 100%);
+    mix-blend-mode: screen;
+    pointer-events: none;
 }
 
 /* Main Content Layer Isolation */
