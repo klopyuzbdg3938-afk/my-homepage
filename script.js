@@ -52,56 +52,87 @@ function initAmbientCanvas() {
 
     // Register global click trigger
     spawnCanvasWaterWave = function(clickX, clickY) {
-        // 1. Gravitational Pulse (引力漩涡): Pull all nearby particles within 350px toward (clickX, clickY)
+        // 1. Gravitational Pulse (引力漩涡): Pull all nearby particles within 380px toward (clickX, clickY)
         gravityPulses.push({
             x: clickX,
             y: clickY,
-            radius: 350,
-            life: 25 // 25 animation frames of pull
+            radius: 380,
+            life: 28 // 28 animation frames of gravitational pull
         });
 
-        // 2. Liquid Sparkle Splash Particles (星水爆破溅散粒子 14 颗)
-        for (let k = 0; k < 14; k++) {
+        // 2. Liquid Sparkle Splash Particles (星水爆破溅散粒子 18 颗 - 丰富颜光系)
+        const splashColors = ['#FFF4D0', '#DFB76C', '#E5C185', '#60A5FA', '#93C5FD', '#3B82F6'];
+        for (let k = 0; k < 18; k++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 3.8 + 1.2;
+            const speed = Math.random() * 4.2 + 1.2;
             splashParticles.push({
                 x: clickX,
                 y: clickY,
                 vx: Math.cos(angle) * speed,
                 vy: Math.sin(angle) * speed,
-                radius: Math.random() * 1.8 + 1.0,
-                color: Math.random() > 0.5 ? '#60A5FA' : '#DFB76C',
-                alpha: 0.95,
-                decay: Math.random() * 0.03 + 0.02
+                radius: Math.random() * 2.0 + 0.8,
+                color: splashColors[Math.floor(Math.random() * splashColors.length)],
+                alpha: 0.98,
+                decay: Math.random() * 0.028 + 0.018
             });
         }
 
         // 3. Shockwave Water Ring (灵动引力水波光环)
-        activeWaterWaves.push({ x: clickX, y: clickY, radius: 2, maxRadius: 200, alpha: 0.65, speed: 3.8, delay: 0 });
-        activeWaterWaves.push({ x: clickX, y: clickY, radius: 0, maxRadius: 160, alpha: 0.45, speed: 3.0, delay: 4 });
+        activeWaterWaves.push({ x: clickX, y: clickY, radius: 2, maxRadius: 220, alpha: 0.65, speed: 4.0, delay: 0 });
+        activeWaterWaves.push({ x: clickX, y: clickY, radius: 0, maxRadius: 170, alpha: 0.45, speed: 3.2, delay: 4 });
     };
 
-    const particleCount = 210; // 210 Dual-Depth Starfield Dust & Foreground Nodes
+    const particleCount = 360; // 360 Master 3D Parallax Multi-Tiered Starfield Nodes
     const particles = [];
 
-    // Amber Gold (#DFB76C) & Royal Lapis Lazuli / Sapphire Blue (#2563EB)
-    const goldColors = ['#DFB76C', '#E5C185', '#FFC800', '#FFF0D0'];
-    const blueColors = ['#2563EB', '#3B82F6', '#60A5FA', '#93C5FD'];
+    // Rich Imperial Gold Spectrum & Royal Lapis Lazuli / Sapphire Blue Spectrum
+    const goldColors = ['#FFF4D0', '#E5C185', '#DFB76C', '#C89B45', '#9A7732'];
+    const blueColors = ['#E0F2FE', '#93C5FD', '#60A5FA', '#2563EB', '#1D4ED8'];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
         const colorPalette = isGold ? goldColors : blueColors;
 
-        // Dewdrop water droplets: 20 particles trickle gently downward
-        const isDewdrop = i >= 190;
+        // 4-Tiered 3D Depth Parallax Hierarchy:
+        // Tier 4: Dewdrop (30 particles)
+        // Tier 3: Foreground Bright Stars (70 particles)
+        // Tier 2: Midground Star Dust (120 particles)
+        // Tier 1: Deep Space Dust (140 particles)
+        const isDewdrop = i >= 330;
         const isForeground = i < 70;
-        const color = isDewdrop ? '#60A5FA' : colorPalette[Math.floor(Math.random() * colorPalette.length)];
-        const radius = isDewdrop ? (Math.random() * 1.4 + 1.2) : (isForeground ? (Math.random() * 1.2 + 1.2) : (Math.random() * 0.5 + 0.4));
-        const baseAlpha = isDewdrop ? 0.65 : (isForeground ? (Math.random() * 0.35 + 0.45) : (Math.random() * 0.2 + 0.15));
-        const pulseSpeed = isForeground ? (Math.random() * 0.02 + 0.008) : (Math.random() * 0.008 + 0.003);
+        const isMidground = i >= 70 && i < 190;
+        const isDeepSpace = i >= 190 && i < 330;
 
-        const vx = isDewdrop ? 0 : (Math.random() - 0.5) * (isForeground ? 0.18 : 0.06);
-        const vy = isDewdrop ? (Math.random() * 0.3 + 0.2) : ((Math.random() - 0.5) * (isForeground ? 0.18 : 0.06) - 0.01);
+        const color = isDewdrop ? (Math.random() > 0.5 ? '#93C5FD' : '#60A5FA') : colorPalette[Math.floor(Math.random() * colorPalette.length)];
+
+        let radius, baseAlpha, pulseSpeed, vx, vy;
+
+        if (isDewdrop) {
+            radius = Math.random() * 1.4 + 1.1;
+            baseAlpha = Math.random() * 0.25 + 0.55;
+            pulseSpeed = Math.random() * 0.01 + 0.005;
+            vx = 0;
+            vy = Math.random() * 0.28 + 0.18;
+        } else if (isForeground) {
+            radius = Math.random() * 1.3 + 1.3; // 1.3px ~ 2.6px
+            baseAlpha = Math.random() * 0.35 + 0.50;
+            pulseSpeed = Math.random() * 0.022 + 0.01;
+            vx = (Math.random() - 0.5) * 0.22;
+            vy = (Math.random() - 0.5) * 0.22 - 0.01;
+        } else if (isMidground) {
+            radius = Math.random() * 0.6 + 0.8; // 0.8px ~ 1.4px
+            baseAlpha = Math.random() * 0.25 + 0.28;
+            pulseSpeed = Math.random() * 0.012 + 0.005;
+            vx = (Math.random() - 0.5) * 0.10;
+            vy = (Math.random() - 0.5) * 0.10;
+        } else {
+            // Deep Space Dust (微弱幽微远景)
+            radius = Math.random() * 0.4 + 0.3; // 0.3px ~ 0.7px
+            baseAlpha = Math.random() * 0.15 + 0.08;
+            pulseSpeed = Math.random() * 0.006 + 0.002;
+            vx = (Math.random() - 0.5) * 0.04;
+            vy = (Math.random() - 0.5) * 0.04;
+        }
 
         particles.push({
             x: Math.random() * width,
@@ -112,6 +143,8 @@ function initAmbientCanvas() {
             pulseSpeed: pulseSpeed,
             pulsePhase: Math.random() * Math.PI * 2,
             isForeground: isForeground,
+            isMidground: isMidground,
+            isDeepSpace: isDeepSpace,
             isDewdrop: isDewdrop,
             baseVx: vx,
             baseVy: vy,
@@ -127,7 +160,7 @@ function initAmbientCanvas() {
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, height);
 
-        // Process Gravitational Pulses (计算点击处粒子聚拢引力)
+        // Process Gravitational Pulses (计算点击处粒子聚拢引力 - 具视差物理拉力)
         for (let g = gravityPulses.length - 1; g >= 0; g--) {
             const pulse = gravityPulses[g];
             pulse.life--;
@@ -143,11 +176,12 @@ function initAmbientCanvas() {
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
                 if (dist < pulse.radius && dist > 5) {
-                    // Inward pull acceleration towards click center
-                    const force = (1 - dist / pulse.radius) * 0.45;
+                    // Parallax force: Foreground particles accelerate faster than deep space particles
+                    const depthFactor = p.isForeground ? 0.55 : (p.isMidground ? 0.35 : 0.18);
+                    const force = (1 - dist / pulse.radius) * depthFactor;
                     p.vx += (dx / dist) * force;
                     p.vy += (dy / dist) * force;
-                    p.baseAlpha = Math.min(0.95, p.baseAlpha + 0.04);
+                    p.baseAlpha = Math.min(0.96, p.baseAlpha + 0.04);
                 }
             }
         }
@@ -156,7 +190,7 @@ function initAmbientCanvas() {
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Peaceful slow drift with depth parallax & smooth velocity restoration (防止粒子冻结)
+            // Peaceful slow drift with 3D depth parallax & smooth velocity restoration
             p.x += p.vx;
             p.y += p.vy;
             p.vx += (p.baseVx - p.vx) * 0.05;
@@ -168,17 +202,17 @@ function initAmbientCanvas() {
             if (p.y < -10) p.y = height + 10;
             if (p.y > height + 10) p.y = -10;
 
-            // Asynchronous Sine-Wave Twinkling (时亮时暗 呼吸闪烁算法)
+            // Asynchronous Sine-Wave Twinkling (多层级呼吸闪烁)
             p.pulsePhase += p.pulseSpeed;
-            const amp = p.isForeground ? 0.42 : 0.22;
+            const amp = p.isForeground ? 0.42 : (p.isMidground ? 0.24 : 0.12);
             const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * amp;
-            const clampAlpha = Math.max(0.08, Math.min(0.96, currentAlpha));
+            const clampAlpha = Math.max(0.05, Math.min(0.98, currentAlpha));
 
             // Draw glowing star node with depth-adjusted shadowBlur
             ctx.save();
             ctx.globalAlpha = clampAlpha;
             ctx.fillStyle = p.color;
-            ctx.shadowBlur = p.isForeground ? p.radius * 4.5 : p.radius * 1.5;
+            ctx.shadowBlur = p.isForeground ? p.radius * 4.5 : (p.isMidground ? p.radius * 2.0 : 0);
             ctx.shadowColor = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
