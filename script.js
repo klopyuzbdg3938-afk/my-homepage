@@ -15,26 +15,72 @@ document.addEventListener('DOMContentLoaded', () => {
    -------------------------------------------------------------------------- */
 function initHLSVideoBackground() {
     const video = document.getElementById('hls-bg-video');
-    if (!video) return;
+    if (!video) {
+        console.error('[HLS Video Error] #hls-bg-video element not found in DOM');
+        return;
+    }
+
+    // Force muted & volume 0 to pass strict browser autoplay policies
+    video.muted = true;
+    video.volume = 0;
 
     const videoSrc = 'https://stream.mux.com/kimF2ha9zLrX64H00UgLGPflCzNtl1T0215MlAmeOztv8.m3u8';
 
+    video.onerror = function (e) {
+        console.error('[HLS Native Video Tag Error]', video.error || e);
+    };
+
     if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        console.log('[HLS.js Status] Hls.isSupported() is TRUE. Loading stream...');
         const hls = new Hls({
             enableWorker: true,
-            lowLatencyMode: true
+            lowLatencyMode: true,
+            backBufferLength: 90
         });
         hls.loadSource(videoSrc);
         hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, function () {
-            video.play().catch(e => console.log('Autoplay prevented:', e));
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+            console.log('[HLS.js Status] Manifest parsed successfully with levels:', data.levels);
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log('[HLS.js Success] Background HLS video playing smoothly!');
+                }).catch(err => {
+                    console.warn('[HLS.js Autoplay Warning] Autoplay blocked, forcing muted play:', err);
+                    video.muted = true;
+                    video.play().catch(e => console.error('[HLS.js Play Error]', e));
+                });
+            }
+        });
+
+        hls.on(Hls.Events.ERROR, function (event, data) {
+            console.error('[HLS.js Event Error]', data.type, data.details, data);
+            if (data.fatal) {
+                switch (data.type) {
+                    case Hls.ErrorTypes.NETWORK_ERROR:
+                        console.error('[HLS.js Fatal] Network error. Attempting startLoad()...');
+                        hls.startLoad();
+                        break;
+                    case Hls.ErrorTypes.MEDIA_ERROR:
+                        console.error('[HLS.js Fatal] Media error. Attempting recoverMediaError()...');
+                        hls.recoverMediaError();
+                        break;
+                    default:
+                        console.error('[HLS.js Fatal] Unrecoverable error. Destroying instance.');
+                        hls.destroy();
+                        break;
+                }
+            }
         });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // Native HLS support (Safari iOS/macOS)
+        console.log('[Safari Native HLS Status] Using native browser HLS engine...');
         video.src = videoSrc;
         video.addEventListener('loadedmetadata', function () {
-            video.play().catch(e => console.log('Autoplay prevented:', e));
+            video.play().catch(err => console.error('[Safari Native HLS Play Error]', err));
         });
+    } else {
+        console.error('[HLS Video Fatal] Neither hls.js nor native HLS is supported by this browser.');
     }
 }
 

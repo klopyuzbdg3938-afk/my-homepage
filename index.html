@@ -14,15 +14,15 @@
     <!-- FontAwesome Font Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- HLS.js for Streaming Video Background -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- HLS.js CDN for Streaming Video Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
 
-    <link rel="stylesheet" href="styles.css?v=20260719_v15">
+    <link rel="stylesheet" href="styles.css?v=20260719_v16">
 </head>
 <body class="theme-balance">
     <!-- Fullscreen HLS Video Background & Tech Gold+Blue Blend Overlay -->
     <div class="video-bg-container">
-        <video id="hls-bg-video" autoplay muted loop playsinline class="hls-bg-video"></video>
+        <video id="hls-bg-video" autoplay muted loop playsinline webkit-playsinline crossorigin="anonymous" class="hls-bg-video"></video>
         <div class="video-blend-overlay"></div>
     </div>
 
@@ -414,6 +414,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=20260719_v15"></script>
+    <script src="script.js?v=20260719_v16"></script>
 </body>
 </html>
