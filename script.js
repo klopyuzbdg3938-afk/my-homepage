@@ -188,7 +188,7 @@ function initEnergySimulatorGame() {
             mode = 'magnet';
             btnMagnet.classList.add('active');
             btnRepel.classList.remove('active');
-            showToast('已切换至：引力吸引模式');
+            showToast('已切换至：引擎引流模式');
         });
     }
 
@@ -197,7 +197,7 @@ function initEnergySimulatorGame() {
             mode = 'repel';
             btnRepel.classList.add('active');
             btnMagnet.classList.remove('active');
-            showToast('已切换至：能量排斥冲击模式');
+            showToast('已切换至：协作脉冲模式');
         });
     }
 
@@ -208,7 +208,7 @@ function initEnergySimulatorGame() {
             score += 1000;
             updateHUD();
             triggerVictory();
-            showToast('⚡【双 U 纳水】已蓄满 100%！金水共振开启！');
+            showToast('⚡【全网激活】社区协作效能达到 100%！');
         });
     }
 
@@ -220,7 +220,7 @@ function initEnergySimulatorGame() {
             isVictory = false;
             if (victoryBanner) victoryBanner.classList.remove('active');
             updateHUD();
-            showToast('已重置聚能模拟器');
+            showToast('已重置协作沙盘');
         });
     }
 
@@ -321,18 +321,24 @@ function initEnergySimulatorGame() {
         observer.observe(container);
     }
 
+    const waterLabels = ["共居", "助餐", "监测", "陪聊"];
+    const goldLabels = ["时间", "客厅", "志愿", "公约"];
+
     function spawnParticle() {
         if (particles.length >= particleMax) return;
         const type = Math.random() > 0.5 ? 'water' : 'gold';
+        const labelList = type === 'water' ? waterLabels : goldLabels;
+        const symbolStr = labelList[Math.floor(Math.random() * labelList.length)];
+
         particles.push({
             x: Math.random() * width,
             y: -15,
             type: type,
             color: type === 'water' ? '#38BDF8' : '#D4AF37',
-            radius: Math.random() * 5 + 9,
+            radius: Math.random() * 3 + 14,
             vx: (Math.random() - 0.5) * 1.5,
             vy: Math.random() * 1.5 + 1.2,
-            symbol: type === 'water' ? 'u' : 'g'
+            symbol: symbolStr
         });
     }
 
@@ -405,7 +411,7 @@ function initEnergySimulatorGame() {
 
             // Label
             ctx.fillStyle = '#94A3B8';
-            ctx.font = '12px "Plus Jakarta Sans", sans-serif';
+            ctx.font = '12px "Noto Serif SC", sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(label, vessel.x, vessel.y + vessel.h + 20);
 
@@ -417,8 +423,8 @@ function initEnergySimulatorGame() {
             ctx.restore();
         }
 
-        drawUVessel(uLeft, waterCap, 'water', '【左 U 樽 - 聚水】');
-        drawUVessel(uRight, goldCap, 'gold', '【右 U 樽 - 藏金】');
+        drawUVessel(uLeft, waterCap, 'water', '【左 U 樽 - 社区资源共享率】');
+        drawUVessel(uRight, goldCap, 'gold', '【右 U 樽 - 邻里互助响应度】');
 
         // 3. Gravitational Cursor Ring
         if (mouse.active) {
@@ -481,9 +487,9 @@ function initEnergySimulatorGame() {
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fill();
 
-            // Symbol text
+            // 2-Character Chinese Label Text
             ctx.fillStyle = '#0B0E14';
-            ctx.font = 'bold 10px sans-serif';
+            ctx.font = 'bold 11px "Noto Serif SC", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(p.symbol, p.x, p.y);
