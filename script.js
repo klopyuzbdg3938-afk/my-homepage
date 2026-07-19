@@ -691,40 +691,25 @@ function showToast(message) {
    -------------------------------------------------------------------------- */
 function initMobileMenu() {
     const toggleBtn = document.getElementById('mobile-menu-toggle');
-    const mainNav = document.querySelector('.main-nav');
-    if (!toggleBtn || !mainNav) return;
+    const drawer = document.getElementById('mobile-nav-drawer');
+    const closeBtn = document.getElementById('mobile-drawer-close');
+    if (!toggleBtn || !drawer) return;
 
-    // Create backdrop if not exists
-    let backdrop = document.querySelector('.nav-backdrop');
-    if (!backdrop) {
-        backdrop = document.createElement('div');
-        backdrop.className = 'nav-backdrop';
-        document.body.appendChild(backdrop);
+    function openDrawer() {
+        drawer.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
 
-    function toggleMenu() {
-        const isOpen = mainNav.classList.contains('mobile-active');
-        if (isOpen) {
-            mainNav.classList.remove('mobile-active');
-            backdrop.classList.remove('active');
-            toggleBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-        } else {
-            mainNav.classList.add('mobile-active');
-            backdrop.classList.add('active');
-            toggleBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-        }
+    function closeDrawer() {
+        drawer.classList.remove('active');
+        document.body.style.overflow = '';
     }
 
-    toggleBtn.addEventListener('click', toggleMenu);
-    backdrop.addEventListener('click', toggleMenu);
+    toggleBtn.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
 
-    // Close menu when clicking nav links
-    const navLinks = mainNav.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (mainNav.classList.contains('mobile-active')) {
-                toggleMenu();
-            }
-        });
+    const drawerLinks = drawer.querySelectorAll('.drawer-link, .btn-drawer-action');
+    drawerLinks.forEach(link => {
+        link.addEventListener('click', closeDrawer);
     });
 }
