@@ -798,3 +798,318 @@ section {
     align-items: center;
     gap: 0.5rem;
 }
+
+/* ==========================================================================
+   Mobile & Tablet H5 Responsive Optimization System
+   ========================================================================== */
+
+/* Visibility Utilities */
+.mobile-only {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: flex !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    /* Site Header Mobile H5 */
+    .site-header {
+        padding: 0.9rem 1.25rem;
+    }
+
+    .logo-text {
+        font-size: 1.35rem;
+        letter-spacing: 0.12em;
+    }
+
+    .logo-phonetics {
+        font-size: 0.72rem;
+    }
+
+    /* Navigation Menu H5 Overlay Drawer */
+    .main-nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 78vw;
+        max-width: 320px;
+        height: 100vh;
+        background: rgba(11, 14, 20, 0.96);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-left: 1px solid var(--border-gold);
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 3rem 2rem;
+        gap: 1.8rem;
+        transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 999;
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .main-nav.mobile-active {
+        right: 0;
+    }
+
+    .main-nav .nav-link {
+        font-size: 1.1rem;
+        width: 100%;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Backdrop Overlay when mobile menu is open */
+    .nav-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 998;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .nav-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Hero Section Mobile H5 */
+    .hero-section {
+        padding: 7rem 1.25rem 3.5rem;
+    }
+
+    .hero-badge {
+        font-size: 0.78rem;
+        padding: 0.35rem 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+        font-size: clamp(2.8rem, 14vw, 4.5rem);
+        letter-spacing: 0.12em;
+        margin-bottom: 0.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.05rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.08em;
+    }
+
+    .hero-description {
+        font-size: 0.95rem;
+        line-height: 1.75;
+        margin-bottom: 2rem;
+        padding: 0 0.5rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        margin-bottom: 2.5rem;
+    }
+
+    .btn-hero-primary, .btn-hero-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 0.9rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .hero-metrics {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    .metric-item {
+        flex: 1;
+        min-width: 80px;
+    }
+
+    .metric-val {
+        font-size: 1.4rem;
+    }
+
+    .metric-item.highlight-uu .metric-val {
+        font-size: 1.6rem;
+    }
+
+    .metric-label {
+        font-size: 0.75rem;
+    }
+
+    .metric-divider {
+        height: 25px;
+    }
+
+    /* Common Section Adjustments */
+    section {
+        padding: 3.5rem 1.25rem;
+    }
+
+    .section-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .section-desc {
+        font-size: 0.92rem;
+    }
+
+    /* Letters Grid H5 */
+    .letters-interactive-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .letter-card {
+        padding: 1.25rem 1rem;
+    }
+
+    .letter-symbol {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .letter-card h3 {
+        font-size: 1rem;
+    }
+
+    .letter-card p {
+        font-size: 0.82rem;
+    }
+
+    /* Sci-Fi Energy Simulator H5 */
+    .sci-fi-simulator {
+        padding: 1.25rem;
+        border-radius: var(--radius-md);
+    }
+
+    .visualizer-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .visualizer-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .btn-sim-mode {
+        justify-content: center;
+        padding: 0.5rem 0.6rem;
+        font-size: 0.78rem;
+    }
+
+    /* HUD Meters Bar H5 */
+    .hud-meters-bar {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .score-box {
+        justify-content: space-between;
+    }
+
+    .interactive-simulator-container {
+        height: 280px;
+        touch-action: none;
+    }
+
+    .sim-overlay-hint {
+        font-size: 0.75rem;
+        width: 90%;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    /* Pillars Grid H5 */
+    .pillars-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .pillar-card {
+        padding: 1.75rem 1.25rem;
+    }
+
+    /* Insights Grid H5 */
+    .insights-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    /* Manifesto & Contact H5 */
+    .manifesto-box {
+        padding: 2rem 1.25rem;
+    }
+
+    .manifesto-box h2 {
+        font-size: 1.6rem;
+    }
+
+    .manifesto-text {
+        font-size: 0.95rem;
+    }
+
+    .quick-msg-form .input-group {
+        flex-direction: column;
+    }
+
+    /* Modal Dialog H5 */
+    .modal-card {
+        width: 94%;
+        padding: 1.75rem 1.25rem;
+        max-height: 85vh;
+        margin: 0 0.5rem;
+    }
+
+    .modal-close {
+        top: 1rem;
+        right: 1rem;
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .letters-interactive-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-metrics {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .metric-divider {
+        width: 60%;
+        height: 1px;
+    }
+}
