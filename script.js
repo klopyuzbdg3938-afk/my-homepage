@@ -298,10 +298,26 @@ function initEnergySimulatorGame() {
         mouse.active = false;
     });
 
-    // Particles array
+    // Mobile degradation detection
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const particleMax = isMobileDevice ? 20 : 40;
     const particles = [];
-    const particleMax = 40;
     const splashes = [];
+
+    let isSimVisible = true;
+    let animFrameId = null;
+
+    if ('IntersectionObserver' in window && container) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isSimVisible = entry.isIntersecting;
+                if (isSimVisible && !animFrameId) {
+                    loop();
+                }
+            });
+        }, { threshold: 0.05 });
+        observer.observe(container);
+    }
 
     function spawnParticle() {
         if (particles.length >= particleMax) return;
@@ -320,6 +336,11 @@ function initEnergySimulatorGame() {
 
     // Main Loop
     function loop() {
+        if (!isSimVisible) {
+            animFrameId = null;
+            return;
+        }
+        animFrameId = requestAnimationFrame(loop);
         ctx.clearRect(0, 0, width, height);
 
         // 1. Draw Grid Lines

@@ -778,6 +778,7 @@ section {
     border: 1px solid var(--border-aqua);
     box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
     cursor: crosshair;
+    touch-action: none;
 }
 
 #game-simulator-canvas {
@@ -890,6 +891,17 @@ section {
         height: 4px;
         background: linear-gradient(90deg, #2DD4BF 0%, #38BDF8 100%);
         border-radius: 24px 24px 0 0;
+    }
+
+    /* Care Pillar Warm Amber Glow Transition */
+    #care-pillar.pillar-card {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.6s ease, border-color 0.4s ease;
+    }
+
+    #care-pillar.pillar-card:hover {
+        background: linear-gradient(180deg, rgba(38, 28, 20, 0.88) 0%, rgba(14, 18, 28, 0.92) 100%);
+        box-shadow: 0 25px 55px rgba(223, 183, 108, 0.18), inset 0 0 35px rgba(223, 183, 108, 0.08);
+        border-color: rgba(223, 183, 108, 0.5);
     }
 
     .pillar-card:hover {
@@ -1427,7 +1439,30 @@ section {
         white-space: nowrap;
     }
 
-    /* Pillars Grid H5 Refinements */
+    /* Pillars Grid H5 Refinements & Mobile Accessibility Typography */
+    .hero-description,
+    .section-desc,
+    .letter-card p,
+    .pillar-card p,
+    .article-excerpt,
+    .manifesto-text {
+        font-family: "Noto Serif SC", serif;
+        font-weight: 400;
+        font-size: 0.95rem;
+        line-height: 1.8;
+        letter-spacing: 0.035em;
+        color: rgba(248, 250, 252, 0.88);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .pillar-card h3,
+    .article-title {
+        font-family: "Noto Serif SC", serif;
+        font-weight: 600;
+        letter-spacing: 0.025em;
+        color: rgba(255, 255, 255, 0.96);
+    }
+
     .pillars-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -1444,8 +1479,8 @@ section {
     }
 
     .pillar-card p {
-        font-size: 0.9rem;
-        line-height: 1.65;
+        font-size: 0.95rem;
+        line-height: 1.8;
         margin-bottom: 1.5rem;
     }
 
