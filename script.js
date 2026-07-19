@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. High-Tech Flow Field Particle System: Gold & Water Blue Fluid Dynamics
-      - "聚水纳气" Flow Field Vector Curves
-      - Silk Motion Trails (rgba(0,0,0,0.07))
-      - "双U纳水" Mouse Gravity Vortex Attraction
+   1. Ultra-Fine Silk Flow Engine: Luxury Gold & Water Blue Silk Streams
+      - Nano particles (radius: 0.2px ~ 0.8px, zero shadow blur)
+      - Ultra-long silk motion trails (rgba(0, 0, 0, 0.012))
+      - Grand sweeping arcs (0.0007 spatial frequency)
    -------------------------------------------------------------------------- */
 function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas');
@@ -31,8 +31,8 @@ function initAmbientCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    // "双U纳水" Mouse Gravity Vortex Attraction
-    const mouse = { x: width / 2, y: height / 2, active: false, radius: 200 };
+    // "双U纳水" Mouse Deflection
+    const mouse = { x: width / 2, y: height / 2, active: false, radius: 240 };
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
@@ -42,29 +42,25 @@ function initAmbientCanvas() {
         mouse.active = false;
     });
 
-    const particleCount = 130;
+    const particleCount = 140;
     const particles = [];
 
-    // Noble Gold (#FFD700 / #E6B800) & Tech Water Blue (#00BFFF / #38BDF8)
-    const goldColors = ['#FFD700', '#E6B800', '#FCE896'];
-    const blueColors = ['#00BFFF', '#38BDF8', '#0066FF'];
+    // Noble Gold (#FFD700 / #E6B800) & Water Blue (#38BDF8 / #0284C7)
+    const goldColors = ['rgba(230, 184, 0, ', 'rgba(255, 215, 0, ', 'rgba(252, 232, 150, '];
+    const blueColors = ['rgba(56, 189, 248, ', 'rgba(2, 132, 199, ', 'rgba(0, 191, 255, '];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
         const colorPalette = isGold ? goldColors : blueColors;
-        // Gold particles are faster (foreground), Blue are slower (background 3D depth)
-        const speedMultiplier = isGold ? (Math.random() * 0.8 + 0.8) : (Math.random() * 0.4 + 0.35);
+        const colorBase = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        const alpha = Math.random() * 0.25 + 0.15; // Soft translucent 0.15 ~ 0.4 opacity
 
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: isGold ? (Math.random() * 1.5 + 0.8) : (Math.random() * 2.0 + 0.6),
-            color: colorPalette[Math.floor(Math.random() * colorPalette.length)],
-            baseAlpha: isGold ? 0.75 : 0.55,
-            pulseSpeed: Math.random() * 0.03 + 0.01,
-            pulsePhase: Math.random() * Math.PI * 2,
-            speed: speedMultiplier,
-            isGold: isGold
+            radius: Math.random() * 0.6 + 0.2, // Nano micro particle (0.2px ~ 0.8px, NO tadpole heads)
+            color: colorBase + alpha + ')',
+            speed: isGold ? (Math.random() * 0.6 + 0.6) : (Math.random() * 0.4 + 0.4)
         });
     }
 
@@ -72,24 +68,21 @@ function initAmbientCanvas() {
 
     function render() {
         requestAnimationFrame(render);
-        time += 0.004;
+        time += 0.002;
 
-        // Silk Motion Trail: Fade previous frame with semi-transparent black
-        ctx.save();
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+        // Ultra-Long Silk Trail Fading (rgba(0,0,0,0.012) preserves long continuous silk threads)
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.012)';
         ctx.fillRect(0, 0, width, height);
-        ctx.restore();
 
-        // 1. Render Floating Flow Field Particles & Connections
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Flow Field Vector Angle (Sine & Cosine Fluid Waves)
-            const angle = (Math.sin(p.x * 0.0022 + time) + Math.cos(p.y * 0.0022 + time * 0.8)) * Math.PI;
+            // Grand Wavelength Flow Field (0.0007 spatial frequency for wide sweeping curves)
+            const angle = (Math.sin(p.x * 0.0007 + time) + Math.cos(p.y * 0.0007 + time * 0.7)) * Math.PI;
             let vx = Math.cos(angle) * p.speed;
             let vy = Math.sin(angle) * p.speed;
 
-            // "双U纳水" Mouse Gravity Vortex Attraction
+            // Gentle "纳水" Mouse Deflection
             if (mouse.active) {
                 const dx = mouse.x - p.x;
                 const dy = mouse.y - p.y;
@@ -97,40 +90,25 @@ function initAmbientCanvas() {
 
                 if (dist < mouse.radius) {
                     const force = (1 - dist / mouse.radius);
-                    // Radial pull toward cursor
-                    vx += (dx / dist) * force * 1.8;
-                    vy += (dy / dist) * force * 1.8;
-                    // Rotational swirl
-                    vx += (-dy / dist) * force * 1.2;
-                    vy += (dx / dist) * force * 1.2;
+                    vx += (dx / dist) * force * 0.8;
+                    vy += (dy / dist) * force * 0.8;
                 }
             }
 
-            // Move particle
             p.x += vx;
             p.y += vy;
 
-            // Boundary wrapping
-            if (p.x < -20) p.x = width + 20;
-            if (p.x > width + 20) p.x = -20;
-            if (p.y < -20) p.y = height + 20;
-            if (p.y > height + 20) p.y = -20;
+            // Wrap around edges
+            if (p.x < -30) p.x = width + 30;
+            if (p.x > width + 30) p.x = -30;
+            if (p.y < -30) p.y = height + 30;
+            if (p.y > height + 30) p.y = -30;
 
-            // Breathing pulse effect
-            p.pulsePhase += p.pulseSpeed;
-            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.25;
-            const clampAlpha = Math.max(0.15, Math.min(0.95, currentAlpha));
-
-            // Draw glowing particle node
-            ctx.save();
-            ctx.globalAlpha = clampAlpha;
+            // Draw Nano Dust Particle (NO SHADOW BLUR, crisp ultra-fine head)
             ctx.fillStyle = p.color;
-            ctx.shadowBlur = p.isGold ? (p.radius * 8) : (p.radius * 5);
-            ctx.shadowColor = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fill();
-            ctx.restore();
         }
     }
 
