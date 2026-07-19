@@ -14,7 +14,7 @@
     <!-- FontAwesome Font Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="styles.css?v=20260719_v31">
+    <link rel="stylesheet" href="styles.css?v=20260719_v32">
 </head>
 <body class="theme-balance">
     <!-- High-End Gold & Aqua Blue Floating Particle Canvas Background -->
@@ -100,54 +100,88 @@
                         <span>前瞻专栏</span>
                     </a>
                 </div>
+
+                <!-- 顶部水平卡片 (g | uu | x) -->
+                <div class="hero-metrics">
+                    <div class="metric-item">
+                        <span class="metric-val">g</span>
+                        <span class="metric-label">Gold 核心底蕴</span>
+                    </div>
+                    <div class="metric-divider"></div>
+                    <div class="metric-item highlight-uu">
+                        <span class="metric-val">uu</span>
+                        <span class="metric-label">双樽纳水 · 温润滋养</span>
+                    </div>
+                    <div class="metric-divider"></div>
+                    <div class="metric-item">
+                        <span class="metric-val">x</span>
+                        <span class="metric-label">Infinity 汇聚无限</span>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Brand Philosophy / Interactive 风水意境 -->
         <section id="philosophy" class="philosophy-section">
-            <div class="section-container" style="font-family: 'Noto Serif SC', serif;">
+            <div class="section-container w-full max-w-6xl mx-auto flex flex-col items-center justify-center" style="font-family: 'Noto Serif SC', serif;">
+                
                 <!-- 1. 主副标题区 -->
-                <div class="section-header">
-                    <span class="section-tag">VISUAL PHILOSOPHY</span>
-                    <h2 class="section-title">字形美学与现代风水构学</h2>
-                    <p class="section-desc">解构字母线条之流动，融汇东方气场之方圆。藏锋敛锐，温润化境，归于内心的安定与澄明。</p>
+                <div class="section-header text-center mb-16 flex flex-col items-center gap-4">
+                    <p class="section-tag text-amber-400/60 text-[11px] font-light tracking-[0.3em] uppercase">
+                        VISUAL PHILOSOPHY
+                    </p>
+                    <h2 class="section-title text-3xl md:text-4xl font-medium tracking-wide text-white/95">
+                        字形美学与现代风水构学
+                    </h2>
+                    <p class="section-desc text-white/60 text-sm font-light tracking-wider leading-loose max-w-2xl mt-2">
+                        解构字母线条之流动，融汇东方气场之方圆。藏锋敛锐，温润化境，归于内心的安定与澄明。
+                    </p>
                 </div>
 
-                <!-- 2. 四张高奢特色卡片（完美去重版） -->
-                <div class="letters-interactive-grid">
-                    <!-- 卡片 1 (g) -->
-                    <div class="letter-card liquid-glass" data-letter="g">
-                        <div class="letter-badge">首尾</div>
+                <!-- 2. 四张高奢特色卡片 -->
+                <div class="letters-interactive-grid grid grid-cols-1 md:grid-cols-4 gap-6 w-full px-6">
+                    
+                    <!-- 卡片 1 - g -->
+                    <div class="letter-card liquid-glass rounded-2xl p-6 border border-white/5 flex flex-col gap-4 text-left bg-neutral-900/20 backdrop-blur-sm" data-letter="g">
+                        <span class="letter-badge text-xs text-white/40 tracking-widest font-light self-end bg-white/5 px-2 py-0.5 rounded">首尾</span>
                         <div class="letter-symbol">g</div>
-                        <h3 class="card-title-gold">g · 财智磐石</h3>
-                        <p>承袭 “Stone” 之坚实意蕴。以理性科技为基座，内敛沉稳，筑就气场之坚实中枢。</p>
+                        <h3 class="card-title-gold text-2xl font-semibold text-[#dfb76c] tracking-wide">g · 财智磐石</h3>
+                        <p class="text-white/70 text-[13px] font-light leading-relaxed tracking-wide">
+                            承袭 “Stone” 之坚实意蕴。以理性科技为基座，内敛沉稳，筑就气场之坚实中枢。
+                        </p>
                         <div class="card-glow"></div>
                     </div>
 
-                    <!-- 卡片 2 (S) -->
-                    <div class="letter-card liquid-glass" data-letter="s">
-                        <div class="letter-badge">气韵</div>
+                    <!-- 卡片 2 - S -->
+                    <div class="letter-card liquid-glass rounded-2xl p-6 border border-white/5 flex flex-col gap-4 text-left bg-neutral-900/20 backdrop-blur-sm" data-letter="s">
+                        <span class="letter-badge text-xs text-white/40 tracking-widest font-light self-end bg-white/5 px-2 py-0.5 rounded">气韵</span>
                         <div class="letter-symbol">s</div>
-                        <h3 class="card-title-gold">S · 流畅气韵</h3>
-                        <p>笔触平滑引流，化金之刚锐为水之柔宽。气脉通达圆融，全无半点凝滞折角。</p>
+                        <h3 class="card-title-gold text-2xl font-semibold text-[#dfb76c] tracking-wide">S · 流畅气韵</h3>
+                        <p class="text-white/70 text-[13px] font-light leading-relaxed tracking-wide">
+                            笔触平滑引流，化金之刚锐为水之柔宽。气脉通达圆融，全无半点凝滞折角。
+                        </p>
                         <div class="card-glow"></div>
                     </div>
 
-                    <!-- 卡片 3 (uu) -->
-                    <div class="letter-card active-card liquid-glass" data-letter="uu">
-                        <div class="letter-badge highlight">双樽聚宝</div>
+                    <!-- 卡片 3 - uu -->
+                    <div class="letter-card active-card liquid-glass rounded-2xl p-6 border border-blue-500/10 flex flex-col gap-4 text-left bg-neutral-900/20 backdrop-blur-sm shadow-[inset_0_1px_12px_rgba(37,99,235,0.05)]" data-letter="uu">
+                        <span class="letter-badge highlight text-xs text-blue-400/60 tracking-widest font-light self-end bg-blue-500/10 px-2 py-0.5 rounded">双樽聚宝</span>
                         <div class="letter-symbol uu-glow">uu</div>
-                        <h3 class="card-title-blue">uu · 双樽纳水</h3>
-                        <p>连续开口呈双樽聚宝之元宝格局。承接天地灵气，汇聚智慧水汽，温润致远。</p>
+                        <h3 class="card-title-blue text-2xl font-semibold text-[#2563eb] tracking-wide drop-shadow-[0_0_8px_rgba(37,99,235,0.2)]">uu · 双樽纳水</h3>
+                        <p class="text-white/70 text-[13px] font-light leading-relaxed tracking-wide">
+                            连续开口呈双樽聚宝之元宝格局。承接天地灵气，汇聚智慧水汽，温润致远。
+                        </p>
                         <div class="card-glow"></div>
                     </div>
 
-                    <!-- Letter X -->
-                    <div class="letter-card" data-letter="x">
-                        <div class="letter-badge">锁金</div>
+                    <!-- 卡片 4 - X -->
+                    <div class="letter-card liquid-glass rounded-2xl p-6 border border-white/5 flex flex-col gap-4 text-left bg-neutral-900/20 backdrop-blur-sm" data-letter="x">
+                        <span class="letter-badge text-xs text-white/40 tracking-widest font-light self-end bg-white/5 px-2 py-0.5 rounded">锁金</span>
                         <div class="letter-symbol">x</div>
-                        <h3>Infinity 交叉锁金</h3>
-                        <p>结尾 X 象征无限符号与交叉锁扣，将蓄水纳气紧紧闭环，收拢灵感与能量。</p>
+                        <h3 class="card-title-gold text-2xl font-semibold text-[#dfb76c] tracking-wide">X · 无限锁金</h3>
+                        <p class="text-white/70 text-[13px] font-light leading-relaxed tracking-wide">
+                            结尾交叉如无限锁扣。气场至此紧密闭环，内蓄高阶灵感，外锁核心能量。
+                        </p>
                         <div class="card-glow"></div>
                     </div>
                 </div>
@@ -377,6 +411,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=20260719_v31"></script>
+    <script src="script.js?v=20260719_v32"></script>
 </body>
 </html>
