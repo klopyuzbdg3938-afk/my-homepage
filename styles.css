@@ -103,15 +103,15 @@ body {
     height: 100%;
     object-fit: cover;
     display: block;
-    opacity: 0.9;
-    filter: brightness(1.2) contrast(1.35) hue-rotate(-30deg);
+    opacity: 0.55;
 }
 
 .video-blend-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(2, 132, 199, 0.75) 0%, rgba(56, 189, 248, 0.45) 45%, rgba(212, 175, 55, 0.75) 80%, rgba(255, 183, 0, 0.88) 100%);
-    mix-blend-mode: color-dodge;
+    background: linear-gradient(135deg, #e6b800 0%, #0052cc 60%, #000000 100%);
+    mix-blend-mode: overlay;
+    opacity: 0.88;
     pointer-events: none;
 }
 
