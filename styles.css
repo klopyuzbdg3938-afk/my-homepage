@@ -252,17 +252,17 @@ main {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.55rem 1.65rem;
+    padding: 0.6rem 1.8rem;
     border-radius: var(--radius-full);
-    background: rgba(223, 183, 108, 0.1);
-    border: 1px solid rgba(223, 183, 108, 0.38);
-    color: #f3e7c4;
+    background: rgba(223, 183, 108, 0.08);
+    border: 1px solid rgba(223, 183, 108, 0.45);
+    color: #F8FAFC;
     font-size: 13.5px;
     font-weight: 500;
-    font-family: var(--font-body);
-    letter-spacing: 0.22em;
-    margin-bottom: 2.2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    font-family: "Noto Serif SC", serif;
+    letter-spacing: 0.25em;
+    margin-bottom: 2.4rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(223, 183, 108, 0.08);
     will-change: transform, box-shadow;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -272,19 +272,19 @@ main {
     height: 6px;
     background-color: var(--gold-primary);
     border-radius: 50%;
-    box-shadow: 0 0 8px rgba(223, 183, 108, 0.6);
+    box-shadow: 0 0 10px rgba(223, 183, 108, 0.8);
     animation: pulseGlow 2s infinite alternate;
 }
 
 @keyframes pulseGlow {
-    0% { opacity: 0.3; transform: scale(0.9); }
-    100% { opacity: 0.9; transform: scale(1.1); }
+    0% { opacity: 0.35; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1.15); }
 }
 
 .hero-title {
     font-family: var(--font-heading);
     font-size: clamp(4rem, 10vw, 7.5rem);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     margin-bottom: 1.2rem;
     display: flex;
     justify-content: center;
@@ -300,17 +300,17 @@ main {
 
 .char-g {
     color: var(--gold-primary);
-    text-shadow: none;
+    text-shadow: 0 0 25px rgba(223, 183, 108, 0.25);
 }
 
 .char-s {
-    color: rgba(255, 255, 255, 0.82);
-    text-shadow: none;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
 }
 
 .char-u1, .char-u2 {
     color: #2563eb;
-    text-shadow: 0 0 16px rgba(37, 99, 235, 0.45), 0 0 32px rgba(29, 78, 216, 0.25);
+    text-shadow: 0 0 20px rgba(37, 99, 235, 0.55), 0 0 40px rgba(29, 78, 216, 0.35);
     transform: translateY(-2px);
     font-weight: 600;
     will-change: transform;
@@ -320,20 +320,20 @@ main {
 .char-u1:hover, .char-u2:hover {
     transform: translateY(-6px) scale(1.05);
     color: #60a5fa;
-    text-shadow: 0 0 24px rgba(96, 165, 250, 0.65), 0 0 40px rgba(37, 99, 235, 0.45);
+    text-shadow: 0 0 28px rgba(96, 165, 250, 0.75), 0 0 45px rgba(37, 99, 235, 0.55);
 }
 
 .char-x {
     color: var(--gold-primary);
-    text-shadow: none;
+    text-shadow: 0 0 25px rgba(223, 183, 108, 0.25);
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
-    font-family: var(--font-body);
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.78);
-    letter-spacing: 0.3em;
+    font-size: 1.3rem;
+    font-family: "Noto Serif SC", serif;
+    font-weight: 500;
+    color: #F8FAFC;
+    letter-spacing: 0.32em;
     margin-bottom: 2.2rem;
 }
 
@@ -341,18 +341,18 @@ main {
     color: var(--gold-primary);
     font-size: 0.95rem;
     margin: 0 0.6rem;
-    opacity: 0.85;
+    opacity: 0.9;
 }
 
 .hero-description {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.72);
+    font-size: 1.15rem;
+    color: rgba(241, 245, 249, 0.88);
     max-width: 760px;
     margin: 0 auto 3.2rem;
-    line-height: 2.0;
-    letter-spacing: 0.08em;
+    line-height: 2.1;
+    letter-spacing: 0.09em;
     font-weight: 300;
-    font-family: var(--font-body);
+    font-family: "Noto Serif SC", serif;
 }
 
 .hero-actions {
@@ -365,15 +365,16 @@ main {
 .btn-hero-primary {
     background: var(--gold-gradient);
     color: #0B0E14;
-    font-family: var(--font-sans);
+    font-family: "Noto Serif SC", serif;
     font-weight: 700;
     font-size: 1rem;
-    padding: 1rem 2.2rem;
+    padding: 1rem 2.4rem;
     border-radius: var(--radius-full);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
+    letter-spacing: 0.08em;
     transition: var(--transition-smooth);
     box-shadow: 0 8px 30px var(--gold-shadow);
 }
@@ -387,15 +388,16 @@ main {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-glass);
     color: var(--text-main);
-    font-family: var(--font-sans);
+    font-family: "Noto Serif SC", serif;
     font-weight: 500;
     font-size: 1rem;
-    padding: 1rem 2.2rem;
+    padding: 1rem 2.4rem;
     border-radius: var(--radius-full);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
+    letter-spacing: 0.08em;
     transition: var(--transition-smooth);
     backdrop-filter: blur(10px);
 }
@@ -413,12 +415,13 @@ main {
     align-items: center;
     gap: 2rem;
     background: var(--bg-card);
-    border: 1px solid var(--border-glass);
+    border: 1px solid var(--border-gold);
     backdrop-filter: blur(16px);
     padding: 1.25rem 2.5rem;
     border-radius: var(--radius-lg);
     max-width: 760px;
     margin: 0 auto;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
 }
 
 .metric-item {
@@ -428,7 +431,7 @@ main {
 }
 
 .metric-val {
-    font-family: var(--font-heading);
+    font-family: "Noto Serif SC", serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--gold-primary);
@@ -441,15 +444,16 @@ main {
 }
 
 .metric-label {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: rgba(226, 232, 240, 0.75);
+    font-family: "Noto Serif SC", serif;
+    letter-spacing: 0.06em;
 }
 
 .metric-divider {
     width: 1px;
     height: 35px;
-    background: var(--border-glass);
+    background: var(--border-gold);
 }
 
 /* Common Section Layout */
@@ -468,29 +472,30 @@ section {
 }
 
 .section-tag {
-    font-family: var(--font-body);
-    font-size: 0.82rem;
-    letter-spacing: 0.3em;
+    font-family: "Noto Serif SC", serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.35em;
     color: var(--gold-primary);
-    font-weight: 300;
+    font-weight: 400;
     display: block;
     margin-bottom: 0.75rem;
 }
 
 .section-title {
-    font-family: var(--font-heading);
-    font-size: 2.2rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-family: "Noto Serif SC", serif;
+    font-size: 2.3rem;
+    color: #FFFFFF;
+    font-weight: 600;
     margin-bottom: 1.2rem;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
 }
 
 .section-desc {
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 1.1rem;
+    color: rgba(226, 232, 240, 0.82);
+    font-size: 1.12rem;
     max-width: 760px;
     margin: 0 auto;
-    font-family: var(--font-body);
+    font-family: "Noto Serif SC", serif;
     font-weight: 300;
     line-height: 2.0;
     letter-spacing: 0.08em;
