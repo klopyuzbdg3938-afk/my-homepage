@@ -100,6 +100,9 @@ function initAmbientCanvas() {
         const baseAlpha = isDewdrop ? 0.65 : (isForeground ? (Math.random() * 0.35 + 0.45) : (Math.random() * 0.2 + 0.15));
         const pulseSpeed = isForeground ? (Math.random() * 0.02 + 0.008) : (Math.random() * 0.008 + 0.003);
 
+        const vx = isDewdrop ? 0 : (Math.random() - 0.5) * (isForeground ? 0.18 : 0.06);
+        const vy = isDewdrop ? (Math.random() * 0.3 + 0.2) : ((Math.random() - 0.5) * (isForeground ? 0.18 : 0.06) - 0.01);
+
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
@@ -110,8 +113,10 @@ function initAmbientCanvas() {
             pulsePhase: Math.random() * Math.PI * 2,
             isForeground: isForeground,
             isDewdrop: isDewdrop,
-            vx: isDewdrop ? 0 : (Math.random() - 0.5) * (isForeground ? 0.18 : 0.06),
-            vy: isDewdrop ? (Math.random() * 0.3 + 0.2) : ((Math.random() - 0.5) * (isForeground ? 0.18 : 0.06) - 0.01)
+            baseVx: vx,
+            baseVy: vy,
+            vx: vx,
+            vy: vy
         });
     }
 
@@ -151,11 +156,11 @@ function initAmbientCanvas() {
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Peaceful slow drift with depth parallax & gravity acceleration damping
+            // Peaceful slow drift with depth parallax & smooth velocity restoration (防止粒子冻结)
             p.x += p.vx;
             p.y += p.vy;
-            p.vx *= 0.96;
-            p.vy *= 0.96;
+            p.vx += (p.baseVx - p.vx) * 0.05;
+            p.vy += (p.baseVy - p.vy) * 0.05;
 
             // Screen boundary wrapping
             if (p.x < -10) p.x = width + 10;
