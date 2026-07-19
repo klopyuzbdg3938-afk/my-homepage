@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. Ultra-Fine Silk Flow Engine: Luxury Gold & Water Blue Silk Streams
-      - Nano particles (radius: 0.2px ~ 0.8px, zero shadow blur)
-      - Ultra-long silk motion trails (rgba(0, 0, 0, 0.012))
-      - Grand sweeping arcs (0.0007 spatial frequency)
+   1. Masterclass 3D Flow System: Gold-Aqua Gradient Silk Engine
+      - Centripetal Convergence towards GSUUX center ("双U纳水" 气场漩涡)
+      - 3D Depth Layers (Background slow & soft, Foreground crisp & fast)
+      - Dynamic Vector Linear Gradient (Aqua Blue -> Jewelry Gold)
    -------------------------------------------------------------------------- */
 function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas');
@@ -32,7 +32,7 @@ function initAmbientCanvas() {
     });
 
     // "双U纳水" Mouse Deflection
-    const mouse = { x: width / 2, y: height / 2, active: false, radius: 240 };
+    const mouse = { x: width / 2, y: height / 2, active: false, radius: 260 };
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
@@ -42,25 +42,37 @@ function initAmbientCanvas() {
         mouse.active = false;
     });
 
-    const particleCount = 140;
+    const particleCount = 150;
     const particles = [];
 
-    // Noble Gold (#FFD700 / #E6B800) & Water Blue (#38BDF8 / #0284C7)
-    const goldColors = ['rgba(230, 184, 0, ', 'rgba(255, 215, 0, ', 'rgba(252, 232, 150, '];
-    const blueColors = ['rgba(56, 189, 248, ', 'rgba(2, 132, 199, ', 'rgba(0, 191, 255, '];
-
     for (let i = 0; i < particleCount; i++) {
-        const isGold = Math.random() > 0.45;
-        const colorPalette = isGold ? goldColors : blueColors;
-        const colorBase = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-        const alpha = Math.random() * 0.25 + 0.15; // Soft translucent 0.15 ~ 0.4 opacity
+        // 3D Depth Layer Assignment: 1 = Background (slow/faint), 2 = Midground, 3 = Foreground (fast/bright)
+        const depth = Math.random() < 0.35 ? 1 : (Math.random() < 0.75 ? 2 : 3);
+        const isGradient = Math.random() > 0.38;
+
+        let radius, speed, alpha;
+        if (depth === 1) {
+            radius = Math.random() * 0.25 + 0.15;
+            speed = Math.random() * 0.3 + 0.3;
+            alpha = Math.random() * 0.1 + 0.08;
+        } else if (depth === 2) {
+            radius = Math.random() * 0.35 + 0.3;
+            speed = Math.random() * 0.5 + 0.5;
+            alpha = Math.random() * 0.15 + 0.18;
+        } else {
+            radius = Math.random() * 0.3 + 0.6;
+            speed = Math.random() * 0.6 + 0.8;
+            alpha = Math.random() * 0.25 + 0.35;
+        }
 
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 0.6 + 0.2, // Nano micro particle (0.2px ~ 0.8px, NO tadpole heads)
-            color: colorBase + alpha + ')',
-            speed: isGold ? (Math.random() * 0.6 + 0.6) : (Math.random() * 0.4 + 0.4)
+            radius: radius,
+            depth: depth,
+            alpha: alpha,
+            speed: speed,
+            isGradient: isGradient
         });
     }
 
@@ -70,42 +82,67 @@ function initAmbientCanvas() {
         requestAnimationFrame(render);
         time += 0.002;
 
-        // Ultra-Long Silk Trail Fading (rgba(0,0,0,0.012) preserves long continuous silk threads)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.012)';
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        // Ultra-Long Silk Trail Fading (rgba(0,0,0,0.011) preserves long continuous silk threads)
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.011)';
         ctx.fillRect(0, 0, width, height);
 
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Grand Wavelength Flow Field (0.0007 spatial frequency for wide sweeping curves)
-            const angle = (Math.sin(p.x * 0.0007 + time) + Math.cos(p.y * 0.0007 + time * 0.7)) * Math.PI;
+            // 1. Flow Field Base Vector Angle (Wide Wavelength Wave)
+            let angle = (Math.sin(p.x * 0.0006 + time) + Math.cos(p.y * 0.0006 + time * 0.7)) * Math.PI;
             let vx = Math.cos(angle) * p.speed;
             let vy = Math.sin(angle) * p.speed;
 
-            // Gentle "纳水" Mouse Deflection
-            if (mouse.active) {
-                const dx = mouse.x - p.x;
-                const dy = mouse.y - p.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+            // 2. "双U纳水" Centripetal Convergence Force towards GSUUX Center
+            const cdx = centerX - p.x;
+            const cdy = centerY - p.y;
+            const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
+            if (cdist > 80 && cdist < width * 0.45) {
+                const centerForce = (1 - cdist / (width * 0.45)) * 0.15;
+                vx += (cdx / cdist) * centerForce;
+                vy += (cdy / cdist) * centerForce;
+            }
 
-                if (dist < mouse.radius) {
-                    const force = (1 - dist / mouse.radius);
-                    vx += (dx / dist) * force * 0.8;
-                    vy += (dy / dist) * force * 0.8;
+            // 3. Mouse Deflection
+            if (mouse.active) {
+                const mdx = mouse.x - p.x;
+                const mdy = mouse.y - p.y;
+                const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                if (mdist < mouse.radius) {
+                    const mforce = (1 - mdist / mouse.radius);
+                    vx += (mdx / mdist) * mforce * 0.7;
+                    vy += (mdy / mdist) * mforce * 0.7;
                 }
             }
 
+            // Update position
             p.x += vx;
             p.y += vy;
 
-            // Wrap around edges
-            if (p.x < -30) p.x = width + 30;
-            if (p.x > width + 30) p.x = -30;
-            if (p.y < -30) p.y = height + 30;
-            if (p.y > height + 30) p.y = -30;
+            // Edge wrapping
+            if (p.x < -40) p.x = width + 40;
+            if (p.x > width + 40) p.x = -40;
+            if (p.y < -40) p.y = height + 40;
+            if (p.y > height + 40) p.y = -40;
 
-            // Draw Nano Dust Particle (NO SHADOW BLUR, crisp ultra-fine head)
-            ctx.fillStyle = p.color;
+            // 4. Dynamic Vector Linear Gradient (Tech Blue -> Jewelry Gold)
+            if (p.isGradient && Math.abs(vx) > 0.01 && Math.abs(vy) > 0.01) {
+                const grad = ctx.createLinearGradient(p.x, p.y, p.x - vx * 16, p.y - vy * 16);
+                grad.addColorStop(0, `rgba(255, 215, 0, ${p.alpha})`);      // Gold Head
+                grad.addColorStop(0.6, `rgba(56, 189, 248, ${p.alpha * 0.8})`); // Aqua Mid
+                grad.addColorStop(1, `rgba(2, 132, 199, 0)`);               // Fade Tail
+                ctx.fillStyle = grad;
+            } else {
+                ctx.fillStyle = p.depth === 3
+                    ? `rgba(255, 215, 0, ${p.alpha})`
+                    : `rgba(56, 189, 248, ${p.alpha})`;
+            }
+
+            // Draw crisp 3D depth particle
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fill();
