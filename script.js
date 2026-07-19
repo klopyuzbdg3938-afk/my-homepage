@@ -730,7 +730,7 @@ function init3DLiquidWave() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 8;
+    camera.position.z = 9;
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -742,11 +742,10 @@ function init3DLiquidWave() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Custom Shader Material for 3D Gold + Water Blue Liquid Waves
+    // Custom Shader Material for Seamless 3D Gold + Water Blue Liquid Waves
     const vertexShader = `
         uniform float uTime;
         varying vec2 vUv;
-        varying vec3 vNormal;
         varying float vElevation;
 
         vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
@@ -800,13 +799,11 @@ function init3DLiquidWave() {
 
         void main() {
             vUv = uv;
-            vNormal = normal;
-            
             vec3 pos = position;
-            float noise = snoise(vec3(pos.x * 0.35, pos.y * 0.35, uTime * 0.25));
-            float noise2 = snoise(vec3(pos.x * 0.7 + uTime * 0.1, pos.y * 0.7, uTime * 0.15));
+            float noise = snoise(vec3(pos.x * 0.25, pos.y * 0.25, uTime * 0.18));
+            float noise2 = snoise(vec3(pos.x * 0.5 + uTime * 0.08, pos.y * 0.5, uTime * 0.12));
             
-            float elevation = (noise * 0.8 + noise2 * 0.3);
+            float elevation = (noise * 0.7 + noise2 * 0.25);
             pos.z += elevation;
             vElevation = elevation;
 
@@ -817,36 +814,34 @@ function init3DLiquidWave() {
     const fragmentShader = `
         uniform float uTime;
         varying vec2 vUv;
-        varying vec3 vNormal;
         varying float vElevation;
 
         void main() {
-            // Gold & Water Blue liquid ribbon palette
+            // Gold & Water Blue palette
             vec3 colorGold = vec3(0.83, 0.68, 0.21);      // #D4AF37
             vec3 colorGoldLight = vec3(0.98, 0.91, 0.58); // #FCE896
             vec3 colorAqua = vec3(0.22, 0.74, 0.97);      // #38BDF8
-            vec3 colorDarkAqua = vec3(0.02, 0.25, 0.45);  // Deep Aqua Blue
+            vec3 colorDarkAqua = vec3(0.03, 0.18, 0.35);  // Deep Aqua Blue
 
-            // Dynamic blend across UV and noise elevation
-            float mixFactor = smoothstep(-0.8, 0.8, vElevation);
+            float mixFactor = smoothstep(-0.6, 0.6, vElevation);
             vec3 baseColor = mix(colorDarkAqua, colorAqua, mixFactor);
             
-            float goldFactor = smoothstep(0.1, 0.9, sin(vUv.x * 3.14 + uTime * 0.3) * 0.5 + 0.5 + vElevation * 0.35);
-            vec3 finalColor = mix(baseColor, colorGold, goldFactor * 0.85);
+            float goldFactor = smoothstep(0.15, 0.85, sin(vUv.x * 3.14 + uTime * 0.2) * 0.5 + 0.5 + vElevation * 0.3);
+            vec3 finalColor = mix(baseColor, colorGold, goldFactor * 0.8);
 
-            // Metallic Specular sheen reflection
-            float spec = pow(max(0.0, vElevation + 0.3), 3.0) * 0.6;
+            // Specular sheen
+            float spec = pow(max(0.0, vElevation + 0.2), 3.0) * 0.5;
             finalColor += colorGoldLight * spec;
 
-            // Smooth opacity falloff
-            float edgeAlpha = smoothstep(0.0, 0.15, vUv.x) * smoothstep(1.0, 0.85, vUv.x) *
-                              smoothstep(0.0, 0.15, vUv.y) * smoothstep(1.0, 0.85, vUv.y);
+            // Seamless radial vignette alpha fade (NO sharp vertical lines)
+            float dist = length(vUv - vec2(0.5));
+            float edgeAlpha = smoothstep(0.72, 0.2, dist);
 
-            gl_FragColor = vec4(finalColor, edgeAlpha * 0.8);
+            gl_FragColor = vec4(finalColor, edgeAlpha * 0.75);
         }
     `;
 
-    const geometry = new THREE.PlaneGeometry(16, 10, 128, 128);
+    const geometry = new THREE.PlaneGeometry(28, 18, 64, 64);
     const material = new THREE.ShaderMaterial({
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
@@ -854,12 +849,12 @@ function init3DLiquidWave() {
             uTime: { value: 0 }
         },
         transparent: true,
-        side: THREE.DoubleSide
+        side: THREE.FrontSide
     });
 
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.x = -Math.PI * 0.15;
-    mesh.rotation.z = Math.PI * 0.05;
+    mesh.rotation.x = -Math.PI * 0.12;
+    mesh.rotation.z = Math.PI * 0.04;
     scene.add(mesh);
 
     const clock = new THREE.Clock();
@@ -868,7 +863,7 @@ function init3DLiquidWave() {
         requestAnimationFrame(animate);
         const elapsedTime = clock.getElapsedTime();
         material.uniforms.uTime.value = elapsedTime;
-        mesh.rotation.y = Math.sin(elapsedTime * 0.1) * 0.08;
+        mesh.rotation.y = Math.sin(elapsedTime * 0.08) * 0.05;
         renderer.render(scene, camera);
     }
 
