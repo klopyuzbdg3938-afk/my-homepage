@@ -7,7 +7,26 @@ document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
     initEnergySimulatorGame();
     initLetterCards();
+    initMouseWaterRipples();
 });
+
+/* Interactive Mouse Water Ripple Listener (点击触发高奢水波涟漪) */
+function initMouseWaterRipples() {
+    document.addEventListener('click', (e) => {
+        // Avoid ripples on interactive buttons, links, or canvas game
+        if (e.target.closest('button, a, input, canvas#simulator-canvas')) return;
+
+        const ripple = document.createElement('div');
+        ripple.className = 'water-ripple-effect';
+        ripple.style.left = `${e.clientX}px`;
+        ripple.style.top = `${e.clientY}px`;
+        document.body.appendChild(ripple);
+
+        setTimeout(() => {
+            ripple.remove();
+        }, 1200);
+    });
+}
 
 /* --------------------------------------------------------------------------
    1. Mysterious Breathing Starfield Engine: Gold & Water Blue Twinkling Stars
@@ -40,12 +59,13 @@ function initAmbientCanvas() {
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
         const colorPalette = isGold ? goldColors : blueColors;
-        const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
 
-        // Dual-Depth Parallax Layering: 65% deep background dust (tiny/dim), 35% foreground bright stars
+        // Dewdrop water droplets: 20 particles trickle gently downward
+        const isDewdrop = i >= 190;
         const isForeground = i < 70;
-        const radius = isForeground ? (Math.random() * 1.2 + 1.2) : (Math.random() * 0.5 + 0.4);
-        const baseAlpha = isForeground ? (Math.random() * 0.35 + 0.45) : (Math.random() * 0.2 + 0.15);
+        const color = isDewdrop ? '#60A5FA' : colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        const radius = isDewdrop ? (Math.random() * 1.4 + 1.2) : (isForeground ? (Math.random() * 1.2 + 1.2) : (Math.random() * 0.5 + 0.4));
+        const baseAlpha = isDewdrop ? 0.65 : (isForeground ? (Math.random() * 0.35 + 0.45) : (Math.random() * 0.2 + 0.15));
         const pulseSpeed = isForeground ? (Math.random() * 0.02 + 0.008) : (Math.random() * 0.008 + 0.003);
 
         particles.push({
@@ -57,8 +77,9 @@ function initAmbientCanvas() {
             pulseSpeed: pulseSpeed,
             pulsePhase: Math.random() * Math.PI * 2,
             isForeground: isForeground,
-            vx: (Math.random() - 0.5) * (isForeground ? 0.18 : 0.06),
-            vy: (Math.random() - 0.5) * (isForeground ? 0.18 : 0.06) - 0.01
+            isDewdrop: isDewdrop,
+            vx: isDewdrop ? 0 : (Math.random() - 0.5) * (isForeground ? 0.18 : 0.06),
+            vy: isDewdrop ? (Math.random() * 0.3 + 0.2) : ((Math.random() - 0.5) * (isForeground ? 0.18 : 0.06) - 0.01)
         });
     }
 

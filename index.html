@@ -14,7 +14,7 @@
     <!-- FontAwesome Font Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="styles.css?v=20260719_v47">
+    <link rel="stylesheet" href="styles.css?v=20260719_v48">
 </head>
 <body class="theme-balance">
     <!-- High-End Gold & Aqua Blue Floating Particle Canvas Background -->
@@ -100,6 +100,26 @@
             </div>
         </section>
 
+        <!-- 灵动金水流向分割线 (Flowing Water Stream Divider) -->
+        <div class="water-stream-divider">
+            <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+                <path d="M0,30 Q300,10 600,30 T1200,30" fill="none" stroke="url(#water-grad)" stroke-width="1.5" opacity="0.65"/>
+                <path d="M0,36 Q300,52 600,36 T1200,36" fill="none" stroke="url(#gold-grad)" stroke-width="1" opacity="0.4"/>
+                <defs>
+                    <linearGradient id="water-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#2563eb" stop-opacity="0"/>
+                        <stop offset="50%" stop-color="#60a5fa" stop-opacity="0.85"/>
+                        <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+                    </linearGradient>
+                    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#dfb76c" stop-opacity="0"/>
+                        <stop offset="50%" stop-color="#dfb76c" stop-opacity="0.65"/>
+                        <stop offset="100%" stop-color="#dfb76c" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+
         <!-- Brand Philosophy / Interactive 风水意境 -->
         <section id="philosophy" class="philosophy-section">
             <div class="section-container w-full max-w-6xl mx-auto flex flex-col items-center justify-center" style="font-family: 'Noto Serif SC', serif;">
@@ -142,12 +162,18 @@
                         <div class="card-glow"></div>
                     </div>
 
-                    <!-- 卡片 3 - uu -->
-                    <div class="letter-card active-card liquid-glass rounded-2xl p-6 border border-blue-500/10 flex flex-col gap-4 text-left bg-neutral-900/20 backdrop-blur-sm shadow-[inset_0_1px_12px_rgba(37,99,235,0.05)]" data-letter="uu">
-                        <span class="letter-badge highlight text-xs text-blue-400/60 tracking-widest font-light self-end bg-blue-500/10 px-2 py-0.5 rounded">双樽聚宝</span>
-                        <div class="letter-symbol uu-glow">uu</div>
-                        <h3 class="card-title-blue text-2xl font-semibold text-[#2563eb] tracking-wide drop-shadow-[0_0_8px_rgba(37,99,235,0.2)]">uu · 双樽纳水</h3>
-                        <p class="text-white/70 text-[13px] font-light leading-relaxed tracking-wide">
+                    <!-- 卡片 3 - uu (双樽纳水 动态升腾气泡) -->
+                    <div class="letter-card active-card liquid-glass rounded-2xl p-6 border border-blue-500/10 flex flex-col gap-4 text-left bg-neutral-900/20 backdrop-blur-sm shadow-[inset_0_1px_12px_rgba(37,99,235,0.05)] relative overflow-hidden" data-letter="uu">
+                        <!-- 动态水流升腾气泡 -->
+                        <div class="uu-water-rising">
+                            <span class="bubble b1"></span>
+                            <span class="bubble b2"></span>
+                            <span class="bubble b3"></span>
+                        </div>
+                        <span class="letter-badge highlight text-xs text-blue-400/60 tracking-widest font-light self-end bg-blue-500/10 px-2 py-0.5 rounded z-10">双樽聚宝</span>
+                        <div class="letter-symbol uu-glow z-10">uu</div>
+                        <h3 class="card-title-blue text-2xl font-semibold text-[#2563eb] tracking-wide drop-shadow-[0_0_8px_rgba(37,99,235,0.2)] z-10">uu · 双樽纳水</h3>
+                        <p class="text-white/70 text-[13px] font-light leading-relaxed tracking-wide z-10">
                             连续开口呈双樽聚宝之元宝格局。承接天地灵气，汇聚智慧水汽，温润致远。
                         </p>
                         <div class="card-glow"></div>
@@ -404,6 +430,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=20260719_v47"></script>
+    <script src="script.js?v=20260719_v48"></script>
 </body>
 </html>

@@ -541,6 +541,94 @@ main {
     background: var(--border-gold);
 }
 
+/* Interactive Mouse Water Ripple Effect (水波涟漪 灵动交互) */
+.water-ripple-effect {
+    position: fixed;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(96, 165, 250, 0.75);
+    box-shadow: 0 0 18px rgba(37, 99, 235, 0.45), inset 0 0 12px rgba(37, 99, 235, 0.3);
+    transform: translate(-50%, -50%) scale(0.2);
+    pointer-events: none;
+    z-index: 9999;
+    animation: waterRippleExpand 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes waterRippleExpand {
+    0% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(0.2);
+    }
+    50% {
+        opacity: 0.65;
+        border-color: rgba(37, 99, 235, 0.55);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(9);
+        border-width: 0.5px;
+    }
+}
+
+/* Flowing SVG Water Stream Divider Line (灵动金水流向分割线) */
+.water-stream-divider {
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.water-stream-divider svg {
+    width: 100%;
+    height: 40px;
+}
+
+/* Rising Water Bubbles inside uu Card (双樽纳水 动态升腾气泡) */
+.uu-water-rising {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
+}
+
+.uu-water-rising .bubble {
+    position: absolute;
+    bottom: -15px;
+    background: radial-gradient(circle at 30% 30%, rgba(147, 197, 253, 0.85), rgba(37, 99, 235, 0.25));
+    border: 1px solid rgba(147, 197, 253, 0.5);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+    animation: bubbleUp 6s infinite ease-in;
+}
+
+.uu-water-rising .b1 { left: 25%; width: 10px; height: 10px; animation-duration: 5.5s; animation-delay: 0s; }
+.uu-water-rising .b2 { left: 60%; width: 14px; height: 14px; animation-duration: 7s; animation-delay: 1.8s; }
+.uu-water-rising .b3 { left: 80%; width: 8px; height: 8px; animation-duration: 4.8s; animation-delay: 3.2s; }
+
+@keyframes bubbleUp {
+    0% {
+        transform: translateY(0) scale(0.6);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.8;
+    }
+    80% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-240px) scale(1.2);
+        opacity: 0;
+    }
+}
+
 /* Common Section Layout */
 section {
     padding: 6rem 2rem;
