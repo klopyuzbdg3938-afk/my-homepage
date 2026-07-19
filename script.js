@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. Masterclass 3D Flow System: Gold-Aqua Gradient Silk Engine
-      - Centripetal Convergence towards GSUUX center ("双U纳水" 气场漩涡)
-      - 3D Depth Layers (Background slow & soft, Foreground crisp & fast)
-      - Dynamic Vector Linear Gradient (Aqua Blue -> Jewelry Gold)
+   1. Ultra-Minimalist Parallel Quantum Stream Engine (Clean, Orderly & Spacious)
+      - Strict particle limit (35 count for generous pure-black negative space)
+      - Controlled silk trail fade (rgba(0,0,0,0.045) prevents line accumulation)
+      - Parallel Laminar Flow (coherent stream vectors, zero tangling or mess)
    -------------------------------------------------------------------------- */
 function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas');
@@ -31,48 +31,27 @@ function initAmbientCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    // "双U纳水" Mouse Deflection
-    const mouse = { x: width / 2, y: height / 2, active: false, radius: 260 };
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-        mouse.active = true;
-    });
-    window.addEventListener('mouseleave', () => {
-        mouse.active = false;
-    });
-
-    const particleCount = 150;
+    const particleCount = 35; // Strict limit: 35 particles for clean negative space
     const particles = [];
 
-    for (let i = 0; i < particleCount; i++) {
-        // 3D Depth Layer Assignment: 1 = Background (slow/faint), 2 = Midground, 3 = Foreground (fast/bright)
-        const depth = Math.random() < 0.35 ? 1 : (Math.random() < 0.75 ? 2 : 3);
-        const isGradient = Math.random() > 0.38;
+    // Noble Gold (#FFD700 / #E6B800) & Tech Aqua (#38BDF8 / #0284C7)
+    const goldColors = ['rgba(255, 215, 0, ', 'rgba(230, 184, 0, '];
+    const blueColors = ['rgba(56, 189, 248, ', 'rgba(2, 132, 199, '];
 
-        let radius, speed, alpha;
-        if (depth === 1) {
-            radius = Math.random() * 0.25 + 0.15;
-            speed = Math.random() * 0.3 + 0.3;
-            alpha = Math.random() * 0.1 + 0.08;
-        } else if (depth === 2) {
-            radius = Math.random() * 0.35 + 0.3;
-            speed = Math.random() * 0.5 + 0.5;
-            alpha = Math.random() * 0.15 + 0.18;
-        } else {
-            radius = Math.random() * 0.3 + 0.6;
-            speed = Math.random() * 0.6 + 0.8;
-            alpha = Math.random() * 0.25 + 0.35;
-        }
+    for (let i = 0; i < particleCount; i++) {
+        const isGold = Math.random() > 0.45;
+        const colorPalette = isGold ? goldColors : blueColors;
+        const colorBase = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        const alpha = Math.random() * 0.12 + 0.12; // Subtle translucent 0.12 ~ 0.24 opacity
 
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: radius,
-            depth: depth,
+            radius: Math.random() * 0.2 + 0.3, // Ultra-fine thickness (0.3px ~ 0.5px)
+            colorBase: colorBase,
             alpha: alpha,
-            speed: speed,
-            isGradient: isGradient
+            speed: isGold ? (Math.random() * 0.7 + 0.8) : (Math.random() * 0.5 + 0.5),
+            isGold: isGold
         });
     }
 
@@ -80,69 +59,44 @@ function initAmbientCanvas() {
 
     function render() {
         requestAnimationFrame(render);
-        time += 0.002;
+        time += 0.003;
 
-        const centerX = width / 2;
-        const centerY = height / 2;
-
-        // Ultra-Long Silk Trail Fading (rgba(0,0,0,0.011) preserves long continuous silk threads)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.011)';
+        // Controlled Trail Fade (0.045 clears old trails quickly, leaving pitch black space)
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.045)';
         ctx.fillRect(0, 0, width, height);
 
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // 1. Flow Field Base Vector Angle (Wide Wavelength Wave)
-            let angle = (Math.sin(p.x * 0.0006 + time) + Math.cos(p.y * 0.0006 + time * 0.7)) * Math.PI;
-            let vx = Math.cos(angle) * p.speed;
-            let vy = Math.sin(angle) * p.speed;
+            // Parallel Laminar Flow Angle (Smooth parallel stream vectors, zero tangling)
+            const angle = Math.PI * 0.12 + Math.sin(p.y * 0.0012 + time) * 0.12;
+            const vx = Math.cos(angle) * p.speed;
+            const vy = Math.sin(angle) * p.speed;
 
-            // 2. "双U纳水" Centripetal Convergence Force towards GSUUX Center
-            const cdx = centerX - p.x;
-            const cdy = centerY - p.y;
-            const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
-            if (cdist > 80 && cdist < width * 0.45) {
-                const centerForce = (1 - cdist / (width * 0.45)) * 0.15;
-                vx += (cdx / cdist) * centerForce;
-                vy += (cdy / cdist) * centerForce;
-            }
-
-            // 3. Mouse Deflection
-            if (mouse.active) {
-                const mdx = mouse.x - p.x;
-                const mdy = mouse.y - p.y;
-                const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-                if (mdist < mouse.radius) {
-                    const mforce = (1 - mdist / mouse.radius);
-                    vx += (mdx / mdist) * mforce * 0.7;
-                    vy += (mdy / mdist) * mforce * 0.7;
-                }
-            }
-
-            // Update position
             p.x += vx;
             p.y += vy;
 
-            // Edge wrapping
-            if (p.x < -40) p.x = width + 40;
-            if (p.x > width + 40) p.x = -40;
-            if (p.y < -40) p.y = height + 40;
-            if (p.y > height + 40) p.y = -40;
-
-            // 4. Dynamic Vector Linear Gradient (Tech Blue -> Jewelry Gold)
-            if (p.isGradient && Math.abs(vx) > 0.01 && Math.abs(vy) > 0.01) {
-                const grad = ctx.createLinearGradient(p.x, p.y, p.x - vx * 16, p.y - vy * 16);
-                grad.addColorStop(0, `rgba(255, 215, 0, ${p.alpha})`);      // Gold Head
-                grad.addColorStop(0.6, `rgba(56, 189, 248, ${p.alpha * 0.8})`); // Aqua Mid
-                grad.addColorStop(1, `rgba(2, 132, 199, 0)`);               // Fade Tail
-                ctx.fillStyle = grad;
-            } else {
-                ctx.fillStyle = p.depth === 3
-                    ? `rgba(255, 215, 0, ${p.alpha})`
-                    : `rgba(56, 189, 248, ${p.alpha})`;
+            // Screen boundary wrapping
+            if (p.x > width + 40) {
+                p.x = -40;
+                p.y = Math.random() * height;
+            }
+            if (p.y > height + 40) {
+                p.y = -40;
+                p.x = Math.random() * width;
             }
 
-            // Draw crisp 3D depth particle
+            // Dynamic Vector Linear Gradient (Aqua Blue -> Jewelry Gold)
+            if (Math.abs(vx) > 0.01 && Math.abs(vy) > 0.01) {
+                const grad = ctx.createLinearGradient(p.x, p.y, p.x - vx * 12, p.y - vy * 12);
+                grad.addColorStop(0, `${p.colorBase}${p.alpha})`);
+                grad.addColorStop(1, `${p.colorBase}0)`);
+                ctx.fillStyle = grad;
+            } else {
+                ctx.fillStyle = `${p.colorBase}${p.alpha})`;
+            }
+
+            // Draw ultra-fine line head
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fill();
