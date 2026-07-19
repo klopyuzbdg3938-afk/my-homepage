@@ -118,7 +118,7 @@ main {
 }
 
 .header-container {
-    max-width: 1280px;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -419,7 +419,8 @@ main {
     backdrop-filter: blur(16px);
     padding: 1.25rem 2.5rem;
     border-radius: var(--radius-lg);
-    max-width: 760px;
+    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
 }
@@ -854,7 +855,8 @@ section {
 
     /* Sci-Fi Energy Simulator Container Desktop Constraints */
     .sci-fi-simulator {
-        max-width: 1100px;
+        max-width: 1200px;
+        width: 100%;
         margin: 0 auto;
         padding: 3rem 2.5rem;
         border-radius: 24px;
@@ -964,7 +966,8 @@ section {
 
     /* Contact Manifesto Box Desktop Centerpiece */
     .manifesto-box {
-        max-width: 1000px;
+        max-width: 1200px;
+        width: 100%;
         margin: 0 auto;
         padding: 4.5rem 4rem;
         border-radius: 28px;
@@ -1100,7 +1103,8 @@ section {
 }
 
 .footer-container {
-    max-width: 1100px;
+    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
