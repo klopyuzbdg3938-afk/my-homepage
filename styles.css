@@ -808,7 +808,7 @@ section {
     display: none !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .mobile-only {
         display: flex !important;
     }
@@ -819,27 +819,28 @@ section {
 
     /* Site Header Mobile H5 */
     .site-header {
-        padding: 0.9rem 1.25rem;
+        padding: 0.8rem 1rem;
     }
 
     .logo-text {
-        font-size: 1.35rem;
+        font-size: 1.4rem;
         letter-spacing: 0.12em;
     }
 
     .logo-phonetics {
-        font-size: 0.72rem;
+        display: none !important;
     }
 
     /* Navigation Menu H5 Overlay Drawer */
     .main-nav {
+        display: none !important;
         position: fixed;
         top: 0;
-        right: -100%;
-        width: 78vw;
-        max-width: 320px;
+        right: 0;
+        width: 75vw;
+        max-width: 300px;
         height: 100vh;
-        background: rgba(11, 14, 20, 0.96);
+        background: rgba(11, 14, 20, 0.97);
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
         border-left: 1px solid var(--border-gold);
@@ -848,13 +849,12 @@ section {
         align-items: flex-start;
         padding: 3rem 2rem;
         gap: 1.8rem;
-        transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         z-index: 999;
         box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
     }
 
     .main-nav.mobile-active {
-        right: 0;
+        display: flex !important;
     }
 
     .main-nav .nav-link {
@@ -896,9 +896,10 @@ section {
     }
 
     .hero-title {
-        font-size: clamp(2.8rem, 14vw, 4.5rem);
-        letter-spacing: 0.12em;
+        font-size: clamp(2.2rem, 11vw, 3.8rem);
+        letter-spacing: 0.08em;
         margin-bottom: 0.8rem;
+        flex-wrap: nowrap;
     }
 
     .hero-subtitle {
