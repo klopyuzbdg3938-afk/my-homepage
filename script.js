@@ -10,21 +10,29 @@ document.addEventListener('DOMContentLoaded', () => {
     initMouseWaterRipples();
 });
 
-/* Interactive Mouse Water Ripple Listener (点击触发高奢水波涟漪) */
+/* Interactive Mouse Water Ripple Listener (点击触发真水体多重同心波纹) */
 function initMouseWaterRipples() {
     document.addEventListener('click', (e) => {
         // Avoid ripples on interactive buttons, links, or canvas game
         if (e.target.closest('button, a, input, canvas#simulator-canvas')) return;
 
-        const ripple = document.createElement('div');
-        ripple.className = 'water-ripple-effect';
-        ripple.style.left = `${e.clientX}px`;
-        ripple.style.top = `${e.clientY}px`;
-        document.body.appendChild(ripple);
+        const container = document.createElement('div');
+        container.className = 'water-ripple-container';
+        container.style.left = `${e.clientX}px`;
+        container.style.top = `${e.clientY}px`;
+
+        // Spawn 3 concentric liquid water wave rings propagating sequentially
+        for (let i = 1; i <= 3; i++) {
+            const ring = document.createElement('div');
+            ring.className = `water-ripple-ring ring-${i}`;
+            container.appendChild(ring);
+        }
+
+        document.body.appendChild(container);
 
         setTimeout(() => {
-            ripple.remove();
-        }, 1200);
+            container.remove();
+        }, 1900);
     });
 }
 
