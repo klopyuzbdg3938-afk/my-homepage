@@ -34,9 +34,9 @@ function initAmbientCanvas() {
     const particleCount = 100; // 100 breathing star nodes
     const particles = [];
 
-    // Amber Gold (#FFB700) & Royal Sapphire Blue (#3B82F6 / #2563EB / #60A5FA)
-    const goldColors = ['#FFB700', '#FFC800', '#FCE896'];
-    const blueColors = ['#3B82F6', '#2563EB', '#60A5FA', '#1D4ED8'];
+    // Amber Gold (#DFB76C) & Royal Lapis Lazuli / Sapphire Blue (#2563EB)
+    const goldColors = ['#DFB76C', '#E5C185', '#FFC800', '#FCE896'];
+    const blueColors = ['#2563EB', '#3B82F6', '#60A5FA', '#1D4ED8'];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
@@ -46,13 +46,13 @@ function initAmbientCanvas() {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 1.2 + 0.8, // Circular star (0.8px ~ 2.0px)
+            radius: Math.random() * 1.1 + 0.8, // Circular star dust node (0.8px ~ 1.9px)
             color: color,
-            baseAlpha: Math.random() * 0.35 + 0.35,
-            pulseSpeed: Math.random() * 0.025 + 0.008,
+            baseAlpha: Math.random() * 0.3 + 0.35,
+            pulseSpeed: Math.random() * 0.012 + 0.005, // Ultra-slow deep pulse
             pulsePhase: Math.random() * Math.PI * 2,
-            vx: (Math.random() - 0.5) * 0.15, // Peaceful slow drift
-            vy: (Math.random() - 0.5) * 0.15 - 0.02
+            vx: (Math.random() - 0.5) * 0.12, // Deep calm drift
+            vy: (Math.random() - 0.5) * 0.12 - 0.01
         });
     }
 
@@ -424,21 +424,23 @@ function initEnergySimulatorGame() {
         for (let i = particles.length - 1; i >= 0; i--) {
             const p = particles[i];
 
-            p.vy += 0.04; // Gravity
+            p.vy += 0.035; // Gravity
+            p.vx *= 0.96;  // Viscous fluid air resistance
+            p.vy *= 0.98;
 
             if (mouse.active) {
                 const dx = mouse.x - p.x;
                 const dy = mouse.y - p.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
-                if (dist < 130 && dist > 1) {
-                    const force = (130 - dist) / 130;
+                if (dist < 140 && dist > 1) {
+                    const force = (140 - dist) / 140;
                     if (mode === 'magnet') {
-                        p.vx += (dx / dist) * force * 0.9;
-                        p.vy += (dy / dist) * force * 0.9;
+                        p.vx += (dx / dist) * force * 0.85;
+                        p.vy += (dy / dist) * force * 0.85;
                     } else {
-                        p.vx -= (dx / dist) * force * 1.5;
-                        p.vy -= (dy / dist) * force * 1.5;
+                        p.vx -= (dx / dist) * force * 1.4;
+                        p.vy -= (dy / dist) * force * 1.4;
                     }
                 }
             }
@@ -449,7 +451,7 @@ function initEnergySimulatorGame() {
             // Render Particle
             ctx.save();
             ctx.fillStyle = p.color;
-            ctx.shadowBlur = 12;
+            ctx.shadowBlur = 14;
             ctx.shadowColor = p.color;
 
             ctx.beginPath();
@@ -464,10 +466,10 @@ function initEnergySimulatorGame() {
             ctx.fillText(p.symbol, p.x, p.y);
             ctx.restore();
 
-            // Collision check with Left/Right U vessels
+            // Collision check with Left/Right U vessels (Precise Boundary)
             let absorbed = false;
 
-            if (Math.abs(p.x - uLeft.x) < uLeft.w / 2 && p.y >= uLeft.y && p.y <= uLeft.y + uLeft.h) {
+            if (Math.abs(p.x - uLeft.x) < (uLeft.w / 2 + 5) && p.y >= (uLeft.y - 10) && p.y <= (uLeft.y + uLeft.h)) {
                 absorbed = true;
                 if (p.type === 'water') {
                     waterCap = Math.min(100, waterCap + 2.5);
@@ -480,7 +482,7 @@ function initEnergySimulatorGame() {
                 }
             }
 
-            if (Math.abs(p.x - uRight.x) < uRight.w / 2 && p.y >= uRight.y && p.y <= uRight.y + uRight.h) {
+            if (Math.abs(p.x - uRight.x) < (uRight.w / 2 + 5) && p.y >= (uRight.y - 10) && p.y <= (uRight.y + uRight.h)) {
                 absorbed = true;
                 if (p.type === 'gold') {
                     goldCap = Math.min(100, goldCap + 2.5);
@@ -494,14 +496,14 @@ function initEnergySimulatorGame() {
             }
 
             if (absorbed) {
-                for (let s = 0; s < 6; s++) {
+                for (let s = 0; s < 8; s++) {
                     splashes.push({
                         x: p.x,
                         y: p.y,
-                        vx: (Math.random() - 0.5) * 6,
-                        vy: -Math.random() * 4 - 1,
+                        vx: (Math.random() - 0.5) * 7,
+                        vy: -Math.random() * 5 - 1.5,
                         color: p.color,
-                        radius: Math.random() * 3 + 1,
+                        radius: Math.random() * 3.5 + 1,
                         life: 1.0
                     });
                 }
