@@ -800,6 +800,205 @@ section {
 }
 
 /* ==========================================================================
+   Desktop High-End Refinements & Visual Elevation
+   ========================================================================== */
+
+@media (min-width: 993px) {
+    /* Brand Philosophy 4-Column Balanced Grid */
+    .letters-interactive-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.75rem;
+    }
+
+    .letter-card {
+        padding: 2.2rem 1.6rem;
+        border-radius: 20px;
+        position: relative;
+    }
+
+    .letter-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        transition: var(--transition-smooth);
+    }
+
+    .letter-card:hover::before {
+        background: var(--gold-gradient);
+    }
+
+    .letter-card.active-card::before {
+        background: var(--water-gradient);
+    }
+
+    .letter-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(212, 175, 55, 0.15);
+    }
+
+    /* Sci-Fi Energy Simulator Container Desktop Constraints */
+    .sci-fi-simulator {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 3rem 2.5rem;
+        border-radius: 24px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Core Domains (Pillars Grid) Desktop Elevation */
+    .pillars-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+    }
+
+    .pillar-card {
+        padding: 3.2rem 2.5rem;
+        border-radius: 24px;
+        position: relative;
+        background: linear-gradient(180deg, rgba(22, 30, 46, 0.75) 0%, rgba(14, 18, 28, 0.85) 100%);
+    }
+
+    .pillar-card.tech-theme::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gold-gradient);
+        border-radius: 24px 24px 0 0;
+    }
+
+    .pillar-card.care-theme::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #2DD4BF 0%, #38BDF8 100%);
+        border-radius: 24px 24px 0 0;
+    }
+
+    .pillar-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .pillar-card h3 {
+        font-size: 1.65rem;
+        line-height: 1.4;
+        transition: var(--transition-fast);
+    }
+
+    .pillar-card.tech-theme:hover h3 {
+        color: var(--gold-primary);
+    }
+
+    .pillar-card.care-theme:hover h3 {
+        color: var(--care-teal);
+    }
+
+    .pillar-features li {
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+        transition: var(--transition-fast);
+    }
+
+    .pillar-features li:hover {
+        background: rgba(255, 255, 255, 0.04);
+        transform: translateX(4px);
+    }
+
+    /* Insights & Articles 3-Column Grid Desktop */
+    .insights-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    .article-card {
+        padding: 2.2rem 1.8rem;
+        border-radius: 20px;
+        border: 1px solid var(--border-glass);
+        position: relative;
+    }
+
+    .article-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--aqua-primary);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .article-card:hover .read-more i {
+        transform: translateX(6px);
+    }
+
+    /* Contact Manifesto Box Desktop Centerpiece */
+    .manifesto-box {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 4.5rem 4rem;
+        border-radius: 28px;
+        background: radial-gradient(circle at top right, rgba(28, 44, 74, 0.8) 0%, rgba(14, 18, 28, 0.98) 100%);
+        border: 1px solid rgba(212, 175, 55, 0.35);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 40px rgba(212, 175, 55, 0.15);
+    }
+
+    .manifesto-box h2 {
+        font-size: 2.5rem;
+        letter-spacing: 0.12em;
+    }
+
+    .contact-methods {
+        gap: 2rem;
+    }
+
+    .contact-item {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border-glass);
+        padding: 0.75rem 1.6rem;
+        border-radius: 9999px;
+        transition: var(--transition-fast);
+    }
+
+    .contact-item:hover {
+        border-color: var(--gold-primary);
+        background: rgba(212, 175, 55, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .quick-msg-form {
+        max-width: 700px;
+    }
+
+    .quick-msg-form input,
+    .quick-msg-form textarea {
+        background: rgba(11, 14, 20, 0.8);
+        border: 1px solid var(--border-gold);
+        border-radius: 14px;
+        padding: 1rem 1.4rem;
+        font-size: 0.95rem;
+    }
+
+    .quick-msg-form input:focus,
+    .quick-msg-form textarea:focus {
+        border-color: var(--gold-primary);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-submit {
+        padding: 1.1rem 2.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* ==========================================================================
    Mobile & Tablet H5 Responsive Optimization System
    ========================================================================== */
 
