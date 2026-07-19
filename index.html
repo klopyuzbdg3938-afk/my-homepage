@@ -14,10 +14,16 @@
     <!-- FontAwesome Font Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" href="styles.css?v=20260719_v9">
+    <!-- Three.js for 60fps 3D Gold + Water Blue Liquid Wave Shader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css?v=20260719_v10">
 </head>
 <body class="theme-balance">
-    <!-- Fluid Waves & Gold + Water Blue Particles Canvas Background (Instant 60fps) -->
+    <!-- 3D Gold + Water Blue Liquid Wave Shader Canvas (Instant 60fps WebGL) -->
+    <canvas id="liquid-wave-canvas" class="liquid-wave-canvas"></canvas>
+
+    <!-- Fluid Waves & Gold + Water Blue Particles Canvas Background -->
     <canvas id="ambient-canvas"></canvas>
 
     <!-- Glowing Background Orbs (Gold & Aqua Blue) -->
