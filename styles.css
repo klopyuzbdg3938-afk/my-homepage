@@ -1081,4 +1081,127 @@ section {
         box-shadow: 0 12px 40px rgba(212, 175, 55, 0.5);
     }
 
+/* ==========================================================================
+   High-End Chinese Literary Serif Site Footer
+   ========================================================================== */
+.site-footer {
+    background: linear-gradient(180deg, rgba(11, 14, 20, 0.88) 0%, rgba(5, 7, 10, 0.98) 100%);
+    border-top: 1px solid rgba(212, 175, 55, 0.25);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    padding: 4.5rem 2rem 3.5rem;
+    position: relative;
+    z-index: 10;
+    font-family: "Noto Serif SC", serif;
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2.2rem;
+}
+
+.footer-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.footer-logo {
+    font-family: var(--font-heading);
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    background: linear-gradient(135deg, #FFF0D0 0%, #DFB76C 50%, #9A7732 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.25));
+}
+
+.footer-phonetics {
+    font-family: "Noto Serif SC", serif;
+    font-size: 0.95rem;
+    color: rgba(223, 183, 108, 0.85);
+    letter-spacing: 0.2em;
+}
+
+.footer-tagline {
+    font-family: "Noto Serif SC", serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: #E2E8F0;
+    letter-spacing: 0.18em;
+}
+
+.footer-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.f-badge {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.22);
+    padding: 0.45rem 1.1rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    color: #CBD5E1;
+    letter-spacing: 0.08em;
+    transition: var(--transition-fast);
+}
+
+.f-badge i {
+    color: var(--gold-primary);
+    margin-right: 0.4rem;
+}
+
+.f-badge:hover {
+    border-color: var(--gold-primary);
+    background: rgba(212, 175, 55, 0.14);
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.22);
+}
+
+.footer-divider {
+    width: 100%;
+    max-width: 520px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.45), transparent);
+    margin: 0.25rem 0;
+}
+
+.footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.footer-copy {
+    font-family: "Noto Serif SC", serif;
+    font-size: 0.92rem;
+    color: rgba(203, 213, 225, 0.8);
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+}
+
+.footer-credits {
+    font-size: 0.8rem;
+    color: rgba(148, 163, 184, 0.55);
+    letter-spacing: 0.15em;
+}
+
 
