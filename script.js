@@ -719,3 +719,110 @@ function initMobileMenu() {
         link.addEventListener('click', closeDrawer);
     });
 }
+
+/* --------------------------------------------------------------------------
+   8. Fullscreen Mux HLS Background Video Player Initialization
+   -------------------------------------------------------------------------- */
+function initMuxVideoBg() {
+    const video = document.getElementById('mux-hls-video');
+    if (!video) return;
+
+    const videoSrc = "https://stream.mux.com/kimF2ha9zLrX64H00UgLGPflCzNtl1T0215MlAmeOztv8.m3u8";
+
+    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        const hls = new Hls({
+            capLevelToPlayerSize: true,
+            maxBufferLength: 30
+        });
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play().catch(e => console.log('Auto-play prevented:', e));
+        });
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = videoSrc;
+        video.addEventListener('loadedmetadata', function() {
+            video.play().catch(e => console.log('Auto-play prevented:', e));
+        });
+    }
+}
+
+/* --------------------------------------------------------------------------
+   9. Interactive Typewriter Hero Email CTA Logic
+   -------------------------------------------------------------------------- */
+let typewriterTimer = null;
+let ctaResetTimer = null;
+
+function typeWriter(text, element, speed = 55, callback) {
+    let index = 0;
+    element.placeholder = "";
+    if (typewriterTimer) clearInterval(typewriterTimer);
+
+    typewriterTimer = setInterval(() => {
+        if (index < text.length) {
+            element.placeholder += text.charAt(index);
+            index++;
+        } else {
+            clearInterval(typewriterTimer);
+            if (callback) callback();
+        }
+    }, speed);
+}
+
+function toggleEmailForm(showForm) {
+    const btn = document.getElementById('btn-early-access');
+    const form = document.getElementById('hero-email-form');
+    const input = document.getElementById('hero-email-input');
+    const submitBtn = document.getElementById('btn-email-submit');
+    const submitIcon = document.getElementById('email-submit-icon');
+
+    if (!btn || !form || !input) return;
+
+    if (showForm) {
+        btn.style.display = 'none';
+        form.style.display = 'flex';
+        input.focus();
+        
+        // Typewriter placeholder: "Enter Your Email Here For Early Access"
+        typeWriter("Enter Your Email Here For Early Access", input, 50);
+
+        // Reset submit icon
+        if (submitBtn) submitBtn.classList.remove('success');
+        if (submitIcon) submitIcon.className = 'fa-solid fa-arrow-right';
+    } else {
+        form.style.display = 'none';
+        btn.style.display = 'flex';
+        input.value = '';
+    }
+}
+
+function handleHeroEmailSubmit(event) {
+    event.preventDefault();
+    const input = document.getElementById('hero-email-input');
+    const submitBtn = document.getElementById('btn-email-submit');
+    const submitIcon = document.getElementById('email-submit-icon');
+
+    if (!input || !input.value) return;
+
+    // Show success icon
+    if (submitBtn) submitBtn.classList.add('success');
+    if (submitIcon) submitIcon.className = 'fa-solid fa-check';
+
+    // Clear input value and type success notification text into placeholder
+    input.value = '';
+    typeWriter("You Will Receive Notifications By Email! ✅", input, 40);
+
+    // Show toast notification
+    showToast("🎉 预约成功！感谢关注 GSUUX，早期体验信息将发送至您的邮箱。");
+
+    // Reset back to button state after 4 seconds
+    if (ctaResetTimer) clearTimeout(ctaResetTimer);
+    ctaResetTimer = setTimeout(() => {
+        toggleEmailForm(false);
+    }, 4000);
+}
+
+// Global initialization call on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    initMuxVideoBg();
+});

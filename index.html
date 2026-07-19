@@ -3,21 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSUUX | 格·苏克斯 - 科技与智慧养老思想空间</title>
+    <title>GSUUX | 格·苏克斯 - A New Way to Think & Create</title>
     <meta name="description" content="GSUUX (格·苏克斯) - 首尾藏金，双U纳水。涵盖高阶科技作品集、分布式数字架构与智慧共享养老关怀。">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Instrument Serif, Inter, Cinzel, Noto Serif SC, Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+SC:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Font Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="styles.css?v=20260719_v7">
+    <!-- HLS.js for Streaming Video Background -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css?v=20260719_v8">
 </head>
 <body class="theme-balance">
-    <!-- Fluid Waves & Gold Particles Canvas Background -->
+    <!-- Fullscreen Video Background Container (Mux HLS Stream) -->
+    <div class="video-bg-container">
+        <video id="mux-hls-video" autoplay muted loop playsinline class="video-bg-player"></video>
+        <div class="video-bg-overlay"></div>
+    </div>
+
+    <!-- Fluid Waves & Gold/Aqua Particles Canvas Background -->
     <canvas id="ambient-canvas"></canvas>
 
     <!-- Glowing Background Orbs -->
@@ -27,28 +36,32 @@
         <div class="orb orb-purple"></div>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="header-container">
-            <a href="#" class="logo-group">
-                <span class="logo-text">GSUUX</span>
-                <span class="logo-phonetics">/ 格 · 苏克斯 /</span>
-            </a>
-            
-            <nav class="main-nav">
-                <a href="#philosophy" class="nav-link"><i class="fa-solid fa-compass"></i> 品牌意境</a>
-                <a href="#tech-pillar" class="nav-link"><i class="fa-solid fa-microchip"></i> 科技探索</a>
-                <a href="#care-pillar" class="nav-link"><i class="fa-solid fa-heart-pulse"></i> 共享养老</a>
-                <a href="#insights" class="nav-link"><i class="fa-solid fa-feather-pointed"></i> 思想与作品</a>
-                <a href="#contact" class="nav-link"><i class="fa-regular fa-paper-plane"></i> 联系</a>
-            </nav>
+    <!-- Navigation Header (Liquid Glass) -->
+    <header class="site-header liquid-glass-header">
+        <div class="header-container liquid-glass-pill">
+            <div class="header-left">
+                <a href="#" class="logo-group">
+                    <i class="fa-solid fa-globe logo-globe-icon"></i>
+                    <span class="logo-text">GSUUX</span>
+                    <span class="logo-phonetics">/ 格 · 苏克斯 /</span>
+                </a>
+                
+                <nav class="main-nav">
+                    <a href="#philosophy" class="nav-link"><i class="fa-solid fa-compass"></i> 品牌意境</a>
+                    <a href="#tech-pillar" class="nav-link"><i class="fa-solid fa-microchip"></i> 科技探索</a>
+                    <a href="#care-pillar" class="nav-link"><i class="fa-solid fa-heart-pulse"></i> 共享养老</a>
+                    <a href="#insights" class="nav-link"><i class="fa-solid fa-feather-pointed"></i> 思想与作品</a>
+                    <a href="#contact" class="nav-link"><i class="fa-regular fa-paper-plane"></i> 联系</a>
+                </nav>
+            </div>
 
             <div class="header-controls">
                 <button id="theme-toggle" class="btn-icon" title="切换气场主题 (金水相涵 / 凝水澄澈 / 耀金充盈)">
                     <i class="fa-solid fa-yin-yang"></i>
                     <span class="tooltip">气场切换</span>
                 </button>
-                <a href="#insights" class="btn-primary-sm desktop-only">进入空间</a>
+                <a href="#contact" class="nav-auth-link desktop-only">Sign Up</a>
+                <a href="#insights" class="btn-primary-sm liquid-glass-btn desktop-only">进入空间</a>
                 <button id="mobile-menu-toggle" class="btn-icon mobile-only" aria-label="切换菜单">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -76,14 +89,21 @@
 
     <!-- Main Content -->
     <main>
-        <!-- Hero Section -->
+        <!-- Full-Screen Dark Hero Section (Gold + Blue Tech Vibe) -->
         <section class="hero-section">
             <div class="hero-container">
-                <div class="hero-badge">
-                    <span class="badge-dot"></span>
-                    <span>现代视觉风水 • 圆融金水格</span>
+                <!-- Tagline -->
+                <div class="hero-tagline">
+                    <span class="tagline-dot"></span>
+                    <span>BUILD A NO-CODE AI APP IN MINUTES • 现代视觉风水 • 圆融金水格</span>
                 </div>
                 
+                <!-- Main Instrument Serif Heading -->
+                <h2 class="hero-serif-heading">
+                    A new way to think and create <br class="hidden md:block" />with computers
+                </h2>
+
+                <!-- GSUUX Monogram Logo -->
                 <h1 class="hero-title">
                     <span class="char-g">G</span><span class="char-s">S</span><span class="char-u1">U</span><span class="char-u2">U</span><span class="char-x">X</span>
                 </h1>
@@ -97,14 +117,29 @@
                     两凹为樽，聚水纳气；首尾锁金，圆融无界。这里是承载高阶科技思想与共享养老温度的个人工作室。
                 </p>
 
-                <div class="hero-actions">
-                    <a href="#philosophy" class="btn-hero-primary">
-                        <span>探索 GSUUX 意境</span>
-                        <i class="fa-solid fa-arrow-down"></i>
-                    </a>
-                    <a href="#insights" class="btn-hero-secondary">
-                        <i class="fa-regular fa-compass"></i>
-                        <span>前瞻专栏</span>
+                <!-- Interactive Typewriter Email CTA Container -->
+                <div class="hero-cta-wrapper" id="hero-cta-wrapper">
+                    <!-- Default State: Get Early Access Button -->
+                    <button class="btn-early-access liquid-glass-btn" id="btn-early-access" onclick="toggleEmailForm(true)">
+                        <span>Get early access / 预约前瞻体验</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                    <!-- Email Form State (Initially hidden) -->
+                    <form class="hero-email-form liquid-glass-form" id="hero-email-form" style="display: none;" onsubmit="handleHeroEmailSubmit(event)">
+                        <i class="fa-regular fa-envelope email-form-icon"></i>
+                        <input type="email" id="hero-email-input" class="hero-email-input" placeholder="" required autocomplete="off">
+                        <button type="submit" class="btn-email-submit" id="btn-email-submit">
+                            <i class="fa-solid fa-arrow-right" id="email-submit-icon"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Play Video Demo Link -->
+                <div class="hero-video-demo">
+                    <a href="#philosophy" class="link-video-demo">
+                        <i class="fa-regular fa-circle-play"></i>
+                        <span>Play Video Demo / 探索 GSUUX 意境</span>
                     </a>
                 </div>
 
