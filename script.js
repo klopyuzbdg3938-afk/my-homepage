@@ -30,12 +30,12 @@ function initAmbientCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    const particleCount = 100; // 100 breathing star nodes
+    const particleCount = 220; // 220 rich breathing star dust nodes
     const particles = [];
 
     // Amber Gold (#DFB76C) & Royal Lapis Lazuli / Sapphire Blue (#2563EB)
-    const goldColors = ['#DFB76C', '#E5C185', '#FFC800', '#FCE896'];
-    const blueColors = ['#2563EB', '#3B82F6', '#60A5FA', '#1D4ED8'];
+    const goldColors = ['#DFB76C', '#E5C185', '#FFC800', '#FCE896', '#FFF0D0'];
+    const blueColors = ['#2563EB', '#3B82F6', '#60A5FA', '#1D4ED8', '#93C5FD'];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
@@ -45,13 +45,13 @@ function initAmbientCanvas() {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 1.1 + 0.8, // Circular star dust node (0.8px ~ 1.9px)
+            radius: Math.random() * 1.5 + 0.6, // Circular star dust node (0.6px ~ 2.1px)
             color: color,
-            baseAlpha: Math.random() * 0.3 + 0.35,
-            pulseSpeed: Math.random() * 0.012 + 0.005, // Ultra-slow deep pulse
+            baseAlpha: Math.random() * 0.35 + 0.35,
+            pulseSpeed: Math.random() * 0.022 + 0.008, // Dynamic breathing pulse
             pulsePhase: Math.random() * Math.PI * 2,
-            vx: (Math.random() - 0.5) * 0.12, // Deep calm drift
-            vy: (Math.random() - 0.5) * 0.12 - 0.01
+            vx: (Math.random() - 0.5) * 0.15, // Peaceful slow drift
+            vy: (Math.random() - 0.5) * 0.15 - 0.01
         });
     }
 
@@ -75,16 +75,16 @@ function initAmbientCanvas() {
             if (p.y < -10) p.y = height + 10;
             if (p.y > height + 10) p.y = -10;
 
-            // Asynchronous Sine-Wave Twinkling (时亮时暗 呼吸闪烁算法)
+            // Asynchronous Sine-Wave Twinkling (明显时亮时暗 呼吸闪烁算法)
             p.pulsePhase += p.pulseSpeed;
-            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.35;
-            const clampAlpha = Math.max(0.1, Math.min(0.88, currentAlpha));
+            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.48;
+            const clampAlpha = Math.max(0.08, Math.min(0.98, currentAlpha));
 
             // Draw glowing star node with soft shadowBlur
             ctx.save();
             ctx.globalAlpha = clampAlpha;
             ctx.fillStyle = p.color;
-            ctx.shadowBlur = p.radius * 3.5;
+            ctx.shadowBlur = p.radius * 4.5;
             ctx.shadowColor = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
