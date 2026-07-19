@@ -82,33 +82,67 @@ body {
     min-height: 100vh;
 }
 
-/* Corner Ambient Mineral Lighting - Top-Left Sapphire Blue & Bottom-Right Imperial Gold */
+/* Corner Ambient Mineral Lighting - Top-Left Sapphire Blue & Bottom-Right Imperial Gold (Dynamic Floating) */
 body::before {
     content: '';
     position: fixed;
-    top: -240px;
-    left: -240px;
-    width: 750px;
-    height: 750px;
+    top: -260px;
+    left: -260px;
+    width: 850px;
+    height: 850px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.16) 0%, rgba(29, 78, 216, 0.05) 50%, transparent 72%);
-    filter: blur(90px);
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.32) 0%, rgba(29, 78, 216, 0.12) 45%, transparent 75%);
+    filter: blur(100px);
     pointer-events: none;
     z-index: 0;
+    will-change: transform, opacity;
+    animation: cornerFloatBlue 11s infinite ease-in-out alternate;
 }
 
 body::after {
     content: '';
     position: fixed;
-    bottom: -240px;
-    right: -240px;
-    width: 750px;
-    height: 750px;
+    bottom: -260px;
+    right: -260px;
+    width: 850px;
+    height: 850px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(223, 183, 108, 0.16) 0%, rgba(184, 147, 75, 0.05) 50%, transparent 72%);
-    filter: blur(90px);
+    background: radial-gradient(circle, rgba(223, 183, 108, 0.32) 0%, rgba(184, 147, 75, 0.12) 45%, transparent 75%);
+    filter: blur(100px);
     pointer-events: none;
     z-index: 0;
+    will-change: transform, opacity;
+    animation: cornerFloatGold 13s infinite ease-in-out alternate;
+}
+
+@keyframes cornerFloatBlue {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.85;
+    }
+    50% {
+        transform: translate(45px, 35px) scale(1.15);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.85;
+    }
+}
+
+@keyframes cornerFloatGold {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.85;
+    }
+    50% {
+        transform: translate(-45px, -35px) scale(1.15);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.85;
+    }
 }
 
 /* High-End Gold & Aqua Blue Floating Particle Canvas Background */
