@@ -10,9 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initMouseWaterRipples();
 });
 
-/* Global Water Wave Trigger Array for Ambient Canvas */
-let spawnCanvasWaterWave = null;
-
 /* Global Mouse Cursor Tracking & Trigger Array for Ambient Canvas */
 let spawnCanvasWaterWave = null;
 let mousePos = { x: -9999, y: -9999, active: false };
@@ -343,9 +340,9 @@ function initAmbientCanvas() {
             ctx.beginPath();
             ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
             ctx.lineWidth = lineWidth;
-            ctx.strokeStyle = `rgba(147, 197, 253, ${wave.alpha * 0.6})`;
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = 'rgba(96, 165, 250, 0.5)';
+            ctx.strokeStyle = `rgba(120, 170, 230, ${wave.alpha * 0.3})`; // softer aqua, reduced opacity
+            ctx.shadowBlur = 6; // softer glow
+            ctx.shadowColor = 'rgba(96, 165, 250, 0.3)';
             ctx.stroke();
 
             // Inner subtle refraction wave
