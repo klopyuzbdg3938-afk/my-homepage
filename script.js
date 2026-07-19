@@ -11,223 +11,146 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. Unified 3D WebGL Background Scene: Gold + Aqua Waves & 3D Particles
+   1. Full-Screen WebGL Shader Engine: Gold + Water Blue Fluid (Flicker-Free)
    -------------------------------------------------------------------------- */
 function initUnified3DScene() {
     const canvas = document.getElementById('ambient-canvas');
     if (!canvas || typeof THREE === 'undefined') return;
 
+    // Set canvas dimensions strictly OUTSIDE animation loop
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 8;
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         alpha: true,
-        antialias: true,
+        antialias: false,
         powerPreference: "high-performance"
     });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+    // Window resize handler strictly OUTSIDE animation loop
     window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        const rw = window.innerWidth;
+        const rh = window.innerHeight;
+        canvas.width = rw;
+        canvas.height = rh;
+        renderer.setSize(rw, rh);
+        if (material && material.uniforms.uResolution) {
+            material.uniforms.uResolution.value.set(rw, rh);
+        }
     });
 
-    // 1. 3D Liquid Wave Ribbon Shader
+    // Full-Screen Quad Vertex Shader (0 vertex clipping, 0 flickering)
     const vertexShader = `
-        uniform float uTime;
         varying vec2 vUv;
-        varying float vElevation;
-
-        vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
-        vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
-
-        float snoise(vec3 v){
-            const vec2 C = vec2(1.0/6.0, 1.0/3.0);
-            const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
-            vec3 i  = floor(v + dot(v, C.yyy) );
-            vec3 x0 = v - i + dot(i, C.xxx) ;
-            vec3 g = step(x0.yzx, x0.xyz);
-            vec3 l = 1.0 - g;
-            vec3 i1 = min( g.xyz, l.zxy );
-            vec3 i2 = max( g.xyz, l.zxy );
-            vec3 x1 = x0 - i1 + 1.0 * C.xxx;
-            vec3 x2 = x0 - i2 + 2.0 * C.xxx;
-            vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
-            i = mod(i, 289.0 );
-            vec4 p = permute( permute( permute(
-                        i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-                    + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
-                    + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-            float n_ = 0.142857142857;
-            vec3  ns = n_ * p.wyz - p.xzx;
-            vec4 j = p - 49.0 * floor(p * ns.z);
-            vec4 x_ = floor(j * ns.z);
-            vec4 y_ = floor(j - 7.0 * x_ );
-            vec4 x = x_ *ns.x + ns.yyyy;
-            vec4 y = y_ *ns.x + ns.yyyy;
-            vec4 h = 1.0 - abs(x) - abs(y);
-            vec4 b0 = vec4( x.xy, y.xy );
-            vec4 b1 = vec4( x.zw, y.zw );
-            vec4 s0 = floor(b0)*2.0 + 1.0;
-            vec4 s1 = floor(b1)*2.0 + 1.0;
-            vec4 sh = -step(h, vec4(0.0));
-            vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
-            vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
-            vec3 p0 = vec3(a0.xy,h.x);
-            vec3 p1 = vec3(a0.zw,h.y);
-            vec3 p2 = vec3(a1.xy,h.z);
-            vec3 p3 = vec3(a1.zw,h.w);
-            vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
-            p0 *= norm.x;
-            p1 *= norm.y;
-            p2 *= norm.z;
-            p3 *= norm.w;
-            vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
-            m = m * m;
-            return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
-        }
-
         void main() {
             vUv = uv;
-            vec3 pos = position;
-            float noise = snoise(vec3(pos.x * 0.2, pos.y * 0.2, uTime * 0.12));
-            float noise2 = snoise(vec3(pos.x * 0.4 + uTime * 0.05, pos.y * 0.4, uTime * 0.08));
-            
-            float elevation = (noise * 0.6 + noise2 * 0.2);
-            pos.z += elevation;
-            vElevation = elevation;
-
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+            gl_Position = vec4(position.xy, 0.0, 1.0);
         }
     `;
 
+    // High-Performance Gold (#D4AF37) + Water Blue (#38BDF8) Fragment Shader
     const fragmentShader = `
         uniform float uTime;
+        uniform vec2 uResolution;
         varying vec2 vUv;
-        varying float vElevation;
+
+        vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+        float snoise(vec2 v) {
+            const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                               -0.577350269189626, 0.024390243902439);
+            vec2 i  = floor(v + dot(v, C.yy) );
+            vec2 x0 = v - i + dot(i, C.xx);
+            vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+            vec4 x12 = x0.xyxy + C.xxzz;
+            x12.xy -= i1;
+            i = mod289(i);
+            vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+                + i.x + vec3(0.0, i1.x, 1.0 ));
+            vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+            m = m*m; m = m*m;
+            vec3 x = 2.0 * fract(p * C.www) - 1.0;
+            vec3 h = abs(x) - 0.5;
+            vec3 ox = floor(x + 0.5);
+            vec3 a0 = x - ox;
+            m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+            vec3 g;
+            g.x  = a0.x  * x0.x  + h.x  * x0.y;
+            g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+            return 130.0 * dot(m, g);
+        }
 
         void main() {
-            vec3 colorGold = vec3(0.83, 0.68, 0.21);      // #D4AF37
-            vec3 colorGoldLight = vec3(0.98, 0.91, 0.58); // #FCE896
-            vec3 colorAqua = vec3(0.22, 0.74, 0.97);      // #38BDF8
-            vec3 colorDarkAqua = vec3(0.02, 0.15, 0.28);  // Deep Aqua
+            vec2 st = (gl_FragCoord.xy - 0.5 * uResolution.xy) / min(uResolution.x, uResolution.y);
 
-            float mixFactor = smoothstep(-0.5, 0.5, vElevation);
-            vec3 baseColor = mix(colorDarkAqua, colorAqua, mixFactor);
-            
-            float goldFactor = smoothstep(0.2, 0.8, sin(vUv.x * 3.14 + uTime * 0.15) * 0.5 + 0.5 + vElevation * 0.25);
-            vec3 finalColor = mix(baseColor, colorGold, goldFactor * 0.75);
+            // Flowing fluid waves
+            float n1 = snoise(st * 1.4 + vec2(uTime * 0.07, uTime * 0.04));
+            float n2 = snoise(st * 2.8 - vec2(uTime * 0.05, n1 * 0.4));
+            float n3 = snoise(st * 4.5 + vec2(n2 * 0.3, uTime * 0.08));
 
-            float spec = pow(max(0.0, vElevation + 0.25), 3.0) * 0.45;
-            finalColor += colorGoldLight * spec;
+            vec3 colorDark = vec3(0.04, 0.05, 0.08);     // #0B0E14
+            vec3 colorBlue = vec3(0.06, 0.28, 0.48);     // Deep Aqua
+            vec3 colorAqua = vec3(0.22, 0.74, 0.97);     // #38BDF8
+            vec3 colorGold = vec3(0.83, 0.68, 0.21);     // #D4AF37
+            vec3 colorGoldLight = vec3(0.98, 0.91, 0.58);// #FCE896
 
-            float dist = length(vUv - vec2(0.5));
-            float edgeAlpha = smoothstep(0.75, 0.15, dist);
+            float wavePattern = smoothstep(-0.6, 0.6, n1 + n2 * 0.4);
+            vec3 bgWave = mix(colorDark, colorBlue, wavePattern * 0.55);
 
-            gl_FragColor = vec4(finalColor, edgeAlpha * 0.65);
+            float goldVein = smoothstep(0.2, 0.8, sin(st.x * 2.2 + n2 * 1.8 + uTime * 0.12) * 0.5 + 0.5 + n3 * 0.25);
+            vec3 finalColor = mix(bgWave, colorGold, goldVein * 0.45);
+
+            float sheen = pow(max(0.0, n2 + 0.25), 3.0) * 0.4;
+            finalColor += colorGoldLight * sheen;
+
+            // Ambient glowing particles inside shader (0 draw call overhead)
+            for (int i = 0; i < 14; i++) {
+                float fi = float(i);
+                vec2 pPos = vec2(
+                    sin(fi * 1.4 + uTime * 0.12) * 0.85,
+                    cos(fi * 1.8 + uTime * 0.10) * 0.65
+                );
+                float pDist = length(st - pPos);
+                float pGlow = smoothstep(0.045, 0.0, pDist);
+                vec3 pColor = (mod(fi, 2.0) == 0.0) ? colorGoldLight : colorAqua;
+                finalColor += pColor * pGlow * 0.55;
+            }
+
+            gl_FragColor = vec4(finalColor, 0.85);
         }
     `;
 
-    const waveGeo = new THREE.PlaneGeometry(28, 18, 64, 64);
-    const waveMat = new THREE.ShaderMaterial({
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    const material = new THREE.ShaderMaterial({
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
-        uniforms: { uTime: { value: 0 } },
-        transparent: true,
-        side: THREE.FrontSide,
-        depthWrite: false
-    });
-
-    const waveMesh = new THREE.Mesh(waveGeo, waveMat);
-    waveMesh.rotation.x = -Math.PI * 0.12;
-    waveMesh.position.z = -1;
-    scene.add(waveMesh);
-
-    // 2. 3D Gold & Aqua Particles in the Same Scene
-    const particleCount = 80;
-    const pGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-    const velocities = [];
-
-    const colorGold = new THREE.Color(0xD4AF37);
-    const colorAqua = new THREE.Color(0x38BDF8);
-
-    for (let i = 0; i < particleCount; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 18;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 12;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 6;
-
-        const pColor = Math.random() > 0.4 ? colorGold : colorAqua;
-        colors[i * 3] = pColor.r;
-        colors[i * 3 + 1] = pColor.g;
-        colors[i * 3 + 2] = pColor.b;
-
-        velocities.push({
-            x: (Math.random() - 0.5) * 0.005,
-            y: (Math.random() - 0.5) * 0.005 + 0.002,
-            z: (Math.random() - 0.5) * 0.003
-        });
-    }
-
-    pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    pGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-    // Particle Texture Canvas (Soft Glow Circle)
-    const pCanvas = document.createElement('canvas');
-    pCanvas.width = 64;
-    pCanvas.height = 64;
-    const pCtx = pCanvas.getContext('2d');
-    const pGrad = pCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    pGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    pGrad.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)');
-    pGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    pCtx.fillStyle = pGrad;
-    pCtx.fillRect(0, 0, 64, 64);
-
-    const pTexture = new THREE.CanvasTexture(pCanvas);
-
-    const pMaterial = new THREE.PointsMaterial({
-        size: 0.18,
-        vertexColors: true,
-        map: pTexture,
-        transparent: true,
-        opacity: 0.8,
+        uniforms: {
+            uTime: { value: 0 },
+            uResolution: { value: new THREE.Vector2(w, h) }
+        },
         depthWrite: false,
-        blending: THREE.AdditiveBlending
+        depthTest: false
     });
 
-    const particleSystem = new THREE.Points(pGeometry, pMaterial);
-    scene.add(particleSystem);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
 
     const clock = new THREE.Clock();
 
+    // Pure draw loop: NO canvas resizing, NO Shader/Program creation
     function animate() {
         requestAnimationFrame(animate);
-        const elapsedTime = clock.getElapsedTime();
-
-        waveMat.uniforms.uTime.value = elapsedTime;
-        waveMesh.rotation.y = Math.sin(elapsedTime * 0.06) * 0.04;
-
-        // Animate particles
-        const posAttr = pGeometry.attributes.position;
-        const posArray = posAttr.array;
-        for (let i = 0; i < particleCount; i++) {
-            posArray[i * 3] += velocities[i].x;
-            posArray[i * 3 + 1] += velocities[i].y;
-            posArray[i * 3 + 2] += velocities[i].z;
-
-            // Bounds check
-            if (posArray[i * 3 + 1] > 7) posArray[i * 3 + 1] = -7;
-            if (posArray[i * 3] > 10) posArray[i * 3] = -10;
-            if (posArray[i * 3] < -10) posArray[i * 3] = 10;
-        }
-        posAttr.needsUpdate = true;
-
+        material.uniforms.uTime.value = clock.getElapsedTime();
         renderer.render(scene, camera);
     }
 
