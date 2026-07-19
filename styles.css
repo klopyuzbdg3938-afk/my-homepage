@@ -1160,32 +1160,28 @@ section {
 /* Mobile Navigation Drawer Overlay */
 .mobile-nav-drawer {
     display: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(11, 14, 20, 0.96);
+    backdrop-filter: blur(25px);
+    z-index: 9999;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.96);
 }
 
-@media (max-width: 992px) {
-    .mobile-nav-drawer {
-        display: flex !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(11, 14, 20, 0.96);
-        backdrop-filter: blur(25px);
-        z-index: 999;
-        flex-direction: column;
-        padding: 2rem 1.5rem;
-        transform: translateY(-100%);
-        opacity: 0;
-        pointer-events: none;
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .mobile-nav-drawer.active {
-        transform: translateY(0);
-        opacity: 1;
-        pointer-events: auto;
-    }
+.mobile-nav-drawer.active {
+    display: flex !important;
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
 
     .drawer-header {
         display: flex;
