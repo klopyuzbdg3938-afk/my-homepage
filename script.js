@@ -11,7 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. High-End Gold & Aqua Blue Floating Particle Canvas Engine (Flicker-Free)
+   1. High-Tech Flow Field Particle System: Gold & Water Blue Fluid Dynamics
+      - "聚水纳气" Flow Field Vector Curves
+      - Silk Motion Trails (rgba(0,0,0,0.07))
+      - "双U纳水" Mouse Gravity Vortex Attraction
    -------------------------------------------------------------------------- */
 function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas');
@@ -28,83 +31,101 @@ function initAmbientCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    const particleCount = 100;
+    // "双U纳水" Mouse Gravity Vortex Attraction
+    const mouse = { x: width / 2, y: height / 2, active: false, radius: 200 };
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        mouse.active = true;
+    });
+    window.addEventListener('mouseleave', () => {
+        mouse.active = false;
+    });
+
+    const particleCount = 130;
     const particles = [];
 
-    // Noble Gold (#FFD700 / #E6B800) & Tech Deep Blue (#00BFFF / #0066FF)
+    // Noble Gold (#FFD700 / #E6B800) & Tech Water Blue (#00BFFF / #38BDF8)
     const goldColors = ['#FFD700', '#E6B800', '#FCE896'];
     const blueColors = ['#00BFFF', '#38BDF8', '#0066FF'];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
         const colorPalette = isGold ? goldColors : blueColors;
+        // Gold particles are faster (foreground), Blue are slower (background 3D depth)
+        const speedMultiplier = isGold ? (Math.random() * 0.8 + 0.8) : (Math.random() * 0.4 + 0.35);
+
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 1.5 + 0.5,
+            radius: isGold ? (Math.random() * 1.5 + 0.8) : (Math.random() * 2.0 + 0.6),
             color: colorPalette[Math.floor(Math.random() * colorPalette.length)],
-            baseAlpha: Math.random() * 0.45 + 0.35,
-            pulseSpeed: Math.random() * 0.02 + 0.008,
+            baseAlpha: isGold ? 0.75 : 0.55,
+            pulseSpeed: Math.random() * 0.03 + 0.01,
             pulsePhase: Math.random() * Math.PI * 2,
-            vx: (Math.random() - 0.5) * 0.22, // Slow, peaceful, high-end movement
-            vy: (Math.random() - 0.5) * 0.22 - 0.04
+            speed: speedMultiplier,
+            isGold: isGold
         });
     }
 
+    let time = 0;
+
     function render() {
         requestAnimationFrame(render);
+        time += 0.004;
 
-        // Clear canvas with pitch black (#000000)
-        ctx.fillStyle = '#000000';
+        // Silk Motion Trail: Fade previous frame with semi-transparent black
+        ctx.save();
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
         ctx.fillRect(0, 0, width, height);
+        ctx.restore();
 
-        // Draw Constellation Connection Lines
-        for (let i = 0; i < particleCount; i++) {
-            const p1 = particles[i];
-            for (let j = i + 1; j < particleCount; j++) {
-                const p2 = particles[j];
-                const dx = p1.x - p2.x;
-                const dy = p1.y - p2.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 110) {
-                    const lineAlpha = (1 - dist / 110) * 0.14 * p1.baseAlpha;
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.strokeStyle = p1.color;
-                    ctx.globalAlpha = lineAlpha;
-                    ctx.lineWidth = 0.6;
-                    ctx.stroke();
-                    ctx.restore();
-                }
-            }
-        }
-
-        // Draw Floating Particles
+        // 1. Render Floating Flow Field Particles & Connections
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Update position
-            p.x += p.vx;
-            p.y += p.vy;
+            // Flow Field Vector Angle (Sine & Cosine Fluid Waves)
+            const angle = (Math.sin(p.x * 0.0022 + time) + Math.cos(p.y * 0.0022 + time * 0.8)) * Math.PI;
+            let vx = Math.cos(angle) * p.speed;
+            let vy = Math.sin(angle) * p.speed;
+
+            // "双U纳水" Mouse Gravity Vortex Attraction
+            if (mouse.active) {
+                const dx = mouse.x - p.x;
+                const dy = mouse.y - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < mouse.radius) {
+                    const force = (1 - dist / mouse.radius);
+                    // Radial pull toward cursor
+                    vx += (dx / dist) * force * 1.8;
+                    vy += (dy / dist) * force * 1.8;
+                    // Rotational swirl
+                    vx += (-dy / dist) * force * 1.2;
+                    vy += (dx / dist) * force * 1.2;
+                }
+            }
+
+            // Move particle
+            p.x += vx;
+            p.y += vy;
 
             // Boundary wrapping
-            if (p.x < -10) p.x = width + 10;
-            if (p.x > width + 10) p.x = -10;
-            if (p.y < -10) p.y = height + 10;
-            if (p.y > height + 10) p.y = -10;
+            if (p.x < -20) p.x = width + 20;
+            if (p.x > width + 20) p.x = -20;
+            if (p.y < -20) p.y = height + 20;
+            if (p.y > height + 20) p.y = -20;
 
             // Breathing pulse effect
             p.pulsePhase += p.pulseSpeed;
-            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.2;
-            const clampAlpha = Math.max(0.1, Math.min(0.85, currentAlpha));
+            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.25;
+            const clampAlpha = Math.max(0.15, Math.min(0.95, currentAlpha));
 
+            // Draw glowing particle node
             ctx.save();
             ctx.globalAlpha = clampAlpha;
             ctx.fillStyle = p.color;
-            ctx.shadowBlur = p.radius * 5;
+            ctx.shadowBlur = p.isGold ? (p.radius * 8) : (p.radius * 5);
             ctx.shadowColor = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
