@@ -147,9 +147,13 @@ function initEnergySimulatorGame() {
         height = canvas.height = container.clientHeight;
     });
 
-    // Audio synthesizer for crystal chimes using Web Audio API
+    // Audio synthesizer for crystal chimes using Web Audio API (with throttling to prevent audio distortion)
     let audioCtx = null;
+    let lastChimeTime = 0;
     function playChime(freq = 587, type = 'sine') {
+        const now = Date.now();
+        if (now - lastChimeTime < 70) return; // Throttle chime audio
+        lastChimeTime = now;
         try {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -157,12 +161,12 @@ function initEnergySimulatorGame() {
             const gain = audioCtx.createGain();
             osc.type = type;
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+            gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.3);
+            osc.stop(audioCtx.currentTime + 0.25);
         } catch (e) {}
     }
 
@@ -553,8 +557,6 @@ function initEnergySimulatorGame() {
 
             if (s.life <= 0) splashes.splice(i, 1);
         }
-
-        requestAnimationFrame(loop);
     }
 
     loop();
