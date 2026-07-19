@@ -18,22 +18,22 @@
     --gold-gradient: linear-gradient(135deg, #e5c185 0%, #dfb76c 50%, #b8934b 100%);
     --gold-shadow: rgba(223, 183, 108, 0.12);
 
-    /* Accents - Deep Indigo / Aqua (深邃黛蓝 / 霁蓝色) */
-    --aqua-primary: #5c7a95;
-    --aqua-light: #8faec7;
-    --aqua-deep: #38566e;
-    --water-gradient: linear-gradient(135deg, #8faec7 0%, #5c7a95 50%, #38566e 100%);
-    --aqua-shadow: rgba(92, 122, 149, 0.12);
+    /* Accents - Royal Lapis Lazuli / Sapphire Blue (青金石蓝 / 宝石绀蓝) */
+    --aqua-primary: #3b82f6;
+    --aqua-light: #60a5fa;
+    --aqua-deep: #1d4ed8;
+    --water-gradient: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #1d4ed8 100%);
+    --aqua-shadow: rgba(59, 130, 246, 0.28);
 
     /* Accents - Elderly Care Warmth */
-    --care-teal: #4b738e;
+    --care-teal: #3b82f6;
     --care-rose: #dfb76c;
 
     /* Text Colors */
     --text-main: rgba(255, 255, 255, 0.78);
     --text-muted: rgba(255, 255, 255, 0.52);
     --text-gold: #dfb76c;
-    --text-aqua: #8faec7;
+    --text-aqua: #60a5fa;
 
     /* Fonts - Noto Serif SC Literary Aesthetic */
     --font-heading: 'Noto Serif SC', 'Cinzel', serif;
@@ -306,15 +306,16 @@ main {
 }
 
 .char-u1, .char-u2 {
-    color: var(--aqua-primary);
-    text-shadow: none;
+    color: #3b82f6;
+    text-shadow: 0 0 14px rgba(59, 130, 246, 0.38);
     transform: translateY(-2px);
     font-weight: 600;
 }
 
 .char-u1:hover, .char-u2:hover {
     transform: translateY(-6px) scale(1.05);
-    color: var(--aqua-light);
+    color: #60a5fa;
+    text-shadow: 0 0 20px rgba(96, 165, 250, 0.55);
 }
 
 .char-x {
@@ -429,9 +430,9 @@ main {
 }
 
 .metric-item.highlight-uu .metric-val {
-    color: var(--aqua-primary);
+    color: #3b82f6;
     font-size: 2.2rem;
-    text-shadow: 0 0 15px var(--aqua-shadow);
+    text-shadow: 0 0 16px rgba(59, 130, 246, 0.45);
 }
 
 .metric-label {

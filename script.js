@@ -34,9 +34,9 @@ function initAmbientCanvas() {
     const particleCount = 100; // 100 breathing star nodes
     const particles = [];
 
-    // Vibrant Amber Gold (#FFB700) & Aurora Neon Blue (#00E5FF)
+    // Amber Gold (#FFB700) & Royal Sapphire Blue (#3B82F6 / #2563EB / #60A5FA)
     const goldColors = ['#FFB700', '#FFC800', '#FCE896'];
-    const blueColors = ['#00E5FF', '#38BDF8', '#0099FF'];
+    const blueColors = ['#3B82F6', '#2563EB', '#60A5FA', '#1D4ED8'];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
