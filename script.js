@@ -30,28 +30,35 @@ function initAmbientCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    const particleCount = 220; // 220 rich breathing star dust nodes
+    const particleCount = 210; // 210 Dual-Depth Starfield Dust & Foreground Nodes
     const particles = [];
 
     // Amber Gold (#DFB76C) & Royal Lapis Lazuli / Sapphire Blue (#2563EB)
-    const goldColors = ['#DFB76C', '#E5C185', '#FFC800', '#FCE896', '#FFF0D0'];
-    const blueColors = ['#2563EB', '#3B82F6', '#60A5FA', '#1D4ED8', '#93C5FD'];
+    const goldColors = ['#DFB76C', '#E5C185', '#FFC800', '#FFF0D0'];
+    const blueColors = ['#2563EB', '#3B82F6', '#60A5FA', '#93C5FD'];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
         const colorPalette = isGold ? goldColors : blueColors;
         const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
 
+        // Dual-Depth Parallax Layering: 65% deep background dust (tiny/dim), 35% foreground bright stars
+        const isForeground = i < 70;
+        const radius = isForeground ? (Math.random() * 1.2 + 1.2) : (Math.random() * 0.5 + 0.4);
+        const baseAlpha = isForeground ? (Math.random() * 0.35 + 0.45) : (Math.random() * 0.2 + 0.15);
+        const pulseSpeed = isForeground ? (Math.random() * 0.02 + 0.008) : (Math.random() * 0.008 + 0.003);
+
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 1.5 + 0.6, // Circular star dust node (0.6px ~ 2.1px)
+            radius: radius,
             color: color,
-            baseAlpha: Math.random() * 0.35 + 0.35,
-            pulseSpeed: Math.random() * 0.022 + 0.008, // Dynamic breathing pulse
+            baseAlpha: baseAlpha,
+            pulseSpeed: pulseSpeed,
             pulsePhase: Math.random() * Math.PI * 2,
-            vx: (Math.random() - 0.5) * 0.15, // Peaceful slow drift
-            vy: (Math.random() - 0.5) * 0.15 - 0.01
+            isForeground: isForeground,
+            vx: (Math.random() - 0.5) * (isForeground ? 0.18 : 0.06),
+            vy: (Math.random() - 0.5) * (isForeground ? 0.18 : 0.06) - 0.01
         });
     }
 
@@ -65,7 +72,7 @@ function initAmbientCanvas() {
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Peaceful slow drift
+            // Peaceful slow drift with depth parallax
             p.x += p.vx;
             p.y += p.vy;
 
@@ -75,16 +82,17 @@ function initAmbientCanvas() {
             if (p.y < -10) p.y = height + 10;
             if (p.y > height + 10) p.y = -10;
 
-            // Asynchronous Sine-Wave Twinkling (明显时亮时暗 呼吸闪烁算法)
+            // Asynchronous Sine-Wave Twinkling (时亮时暗 呼吸闪烁算法)
             p.pulsePhase += p.pulseSpeed;
-            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.48;
-            const clampAlpha = Math.max(0.08, Math.min(0.98, currentAlpha));
+            const amp = p.isForeground ? 0.42 : 0.22;
+            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * amp;
+            const clampAlpha = Math.max(0.08, Math.min(0.96, currentAlpha));
 
-            // Draw glowing star node with soft shadowBlur
+            // Draw glowing star node with depth-adjusted shadowBlur
             ctx.save();
             ctx.globalAlpha = clampAlpha;
             ctx.fillStyle = p.color;
-            ctx.shadowBlur = p.radius * 4.5;
+            ctx.shadowBlur = p.isForeground ? p.radius * 4.5 : p.radius * 1.5;
             ctx.shadowColor = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
