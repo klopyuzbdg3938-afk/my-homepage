@@ -276,7 +276,11 @@ function initAmbientCanvas() {
             if (p.x < -10) p.x = width + 10;
             if (p.x > width + 10) p.x = -10;
             if (p.y < -10) p.y = height + 10;
-            if (p.y > height + 10) p.y = -10;
+            // Dewdrop particles reset to a random x when falling off the bottom
+            if (p.y > height + 10) {
+                p.y = -10;
+                if (p.isDewdrop) p.x = Math.random() * width;
+            }
 
             // Asynchronous Sine-Wave Twinkling (多层级呼吸闪烁)
             p.pulsePhase += p.pulseSpeed;
