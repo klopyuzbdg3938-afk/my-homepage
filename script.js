@@ -18,9 +18,8 @@ let mousePos = { x: -9999, y: -9999, active: false };
 let lastMousePos = { x: -9999, y: -9999 };
 let mouseIdleTimer = null;
 
-/* Interactive Mouse Listener: 跟随引力 + 点击聚拢水波 */
+/* Interactive Mouse Listener: 全部特效跟随鼠标移动触发 */
 function initMouseWaterRipples() {
-    // Track mouse position for continuous hover gravity
     document.addEventListener('mousemove', (e) => {
         if (e.target.closest('button, a, input, canvas#game-simulator-canvas')) {
             mousePos.active = false;
@@ -30,16 +29,11 @@ function initMouseWaterRipples() {
         mousePos.y = e.clientY;
         mousePos.active = true;
         clearTimeout(mouseIdleTimer);
-        mouseIdleTimer = setTimeout(() => { mousePos.active = false; }, 1000);
+        mouseIdleTimer = setTimeout(() => { mousePos.active = false; }, 1200);
     });
 
     document.addEventListener('mouseleave', () => { mousePos.active = false; });
-
-    // Click still triggers gravity burst + water ring
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('button, a, input, canvas#game-simulator-canvas')) return;
-        if (spawnCanvasWaterWave) spawnCanvasWaterWave(e.clientX, e.clientY);
-    });
+    // 不再监听 click，所有特效均由鼠标移动驱动
 }
 
 /* --------------------------------------------------------------------------
@@ -67,37 +61,9 @@ function initAmbientCanvas() {
     const gravityPulses = [];
     const splashParticles = [];
 
-    // Register global click trigger
-    spawnCanvasWaterWave = function(clickX, clickY) {
-        // 1. Gravitational Pulse (引力漩涡): Pull all nearby particles within 380px toward (clickX, clickY)
-        gravityPulses.push({
-            x: clickX,
-            y: clickY,
-            radius: 380,
-            life: 28 // 28 animation frames of gravitational pull
-        });
-
-        // 2. Liquid Sparkle Splash Particles (星水爆破溅散粒子 18 颗 - 丰富颜光系)
-        const splashColors = ['#FFF4D0', '#DFB76C', '#E5C185', '#60A5FA', '#93C5FD', '#3B82F6'];
-        for (let k = 0; k < 18; k++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 4.2 + 1.2;
-            splashParticles.push({
-                x: clickX,
-                y: clickY,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                radius: Math.random() * 2.0 + 0.8,
-                color: splashColors[Math.floor(Math.random() * splashColors.length)],
-                alpha: 0.98,
-                decay: Math.random() * 0.028 + 0.018
-            });
-        }
-
-        // 3. Shockwave Water Ring (灵动引力水波光环)
-        activeWaterWaves.push({ x: clickX, y: clickY, radius: 2, maxRadius: 220, alpha: 0.65, speed: 4.0, delay: 0 });
-        activeWaterWaves.push({ x: clickX, y: clickY, radius: 0, maxRadius: 170, alpha: 0.45, speed: 3.2, delay: 4 });
-    };
+    // 鼠标移动距离累积计数器，用于节流触发水波环
+    let waveDistAccum = 0;
+    const WAVE_EMIT_DIST = 80; // 每移动 80px 触发一次水波
 
     const particleCount = 360; // 360 Master 3D Parallax Multi-Tiered Starfield Nodes
     const particles = [];
@@ -177,55 +143,94 @@ function initAmbientCanvas() {
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, height);
 
-        // === Mouse Hover Continuous Gravity (鼠标跟随磁力牵引) ===
+        // === 鼠标跟随：磁力引力 + 拖尾星芒 + 节流水波环 ===
         if (mousePos.active) {
-            // Trailing starlight droplets as cursor moves
             const dxM = mousePos.x - lastMousePos.x;
             const dyM = mousePos.y - lastMousePos.y;
             const distMoved = Math.sqrt(dxM * dxM + dyM * dyM);
-            if (distMoved > 5 && Math.random() < 0.6) {
-                const trailColors = ['#FFF4D0', '#DFB76C', '#E5C185', '#60A5FA', '#93C5FD'];
-                splashParticles.push({
-                    x: mousePos.x + (Math.random() - 0.5) * 10,
-                    y: mousePos.y + (Math.random() - 0.5) * 10,
-                    vx: (Math.random() - 0.5) * 0.7,
-                    vy: (Math.random() - 0.5) * 0.7 + 0.12,
-                    radius: Math.random() * 1.4 + 0.6,
-                    color: trailColors[Math.floor(Math.random() * trailColors.length)],
-                    alpha: 0.75,
-                    decay: Math.random() * 0.022 + 0.012
-                });
-            }
-            lastMousePos.x = mousePos.x;
-            lastMousePos.y = mousePos.y;
 
-            // Gentle magnetic attraction toward cursor (depth-weighted)
+            if (distMoved > 3) {
+                // 1. 拖尾星芒微粒（鼠标移动时散落）
+                if (Math.random() < 0.55) {
+                    const trailColors = ['#FFF4D0', '#DFB76C', '#E5C185', '#60A5FA', '#93C5FD'];
+                    splashParticles.push({
+                        x: mousePos.x + (Math.random() - 0.5) * 10,
+                        y: mousePos.y + (Math.random() - 0.5) * 10,
+                        vx: (Math.random() - 0.5) * 0.9,
+                        vy: (Math.random() - 0.5) * 0.9 + 0.1,
+                        radius: Math.random() * 1.5 + 0.5,
+                        color: trailColors[Math.floor(Math.random() * trailColors.length)],
+                        alpha: 0.80,
+                        decay: Math.random() * 0.020 + 0.012
+                    });
+                }
+
+                // 2. 累积距离，达到阈值时触发水波环 + 星芒溅散
+                waveDistAccum += distMoved;
+                if (waveDistAccum >= WAVE_EMIT_DIST) {
+                    waveDistAccum = 0;
+
+                    // 水波涟漪双环（极薄晶莹）
+                    activeWaterWaves.push({ x: mousePos.x, y: mousePos.y, radius: 2, maxRadius: 180, alpha: 0.55, speed: 3.5, delay: 0 });
+                    activeWaterWaves.push({ x: mousePos.x, y: mousePos.y, radius: 0, maxRadius: 130, alpha: 0.38, speed: 2.8, delay: 3 });
+
+                    // 小型星芒爆破（6颗，比点击更轻盈）
+                    const burstColors = ['#FFF4D0', '#DFB76C', '#60A5FA', '#93C5FD', '#E5C185', '#3B82F6'];
+                    for (let k = 0; k < 6; k++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = Math.random() * 2.8 + 0.8;
+                        splashParticles.push({
+                            x: mousePos.x,
+                            y: mousePos.y,
+                            vx: Math.cos(angle) * speed,
+                            vy: Math.sin(angle) * speed,
+                            radius: Math.random() * 1.6 + 0.6,
+                            color: burstColors[Math.floor(Math.random() * burstColors.length)],
+                            alpha: 0.90,
+                            decay: Math.random() * 0.025 + 0.015
+                        });
+                    }
+
+                    // 引力脉冲（周围粒子向鼠标聚拢，比点击更温和）
+                    gravityPulses.push({
+                        x: mousePos.x,
+                        y: mousePos.y,
+                        radius: 300,
+                        life: 18
+                    });
+                }
+
+                lastMousePos.x = mousePos.x;
+                lastMousePos.y = mousePos.y;
+            }
+
+            // 3. 持续磁力引力（随时吸引周围粒子）
             for (let i = 0; i < particleCount; i++) {
                 const p = particles[i];
                 const dx = mousePos.x - p.x;
                 const dy = mousePos.y - p.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 260 && dist > 5) {
-                    const depthFactor = p.isForeground ? 0.28 : (p.isMidground ? 0.16 : 0.06);
-                    const force = (1 - dist / 260) * depthFactor;
+                if (dist < 280 && dist > 5) {
+                    const depthFactor = p.isForeground ? 0.30 : (p.isMidground ? 0.18 : 0.07);
+                    const force = (1 - dist / 280) * depthFactor;
                     p.vx += (dx / dist) * force;
                     p.vy += (dy / dist) * force;
                 }
             }
 
-            // Soft dual-ring cursor halo (水蓝 + 哑金)
+            // 4. 双圆环光晕跟随光标
             ctx.save();
             ctx.beginPath();
             ctx.arc(mousePos.x, mousePos.y, 24, 0, Math.PI * 2);
             ctx.lineWidth = 0.7;
-            ctx.strokeStyle = 'rgba(147, 197, 253, 0.40)';
+            ctx.strokeStyle = 'rgba(147, 197, 253, 0.38)';
             ctx.shadowBlur = 9;
-            ctx.shadowColor = 'rgba(96, 165, 250, 0.35)';
+            ctx.shadowColor = 'rgba(96, 165, 250, 0.32)';
             ctx.stroke();
             ctx.beginPath();
             ctx.arc(mousePos.x, mousePos.y, 13, 0, Math.PI * 2);
             ctx.lineWidth = 0.45;
-            ctx.strokeStyle = 'rgba(223, 183, 108, 0.32)';
+            ctx.strokeStyle = 'rgba(223, 183, 108, 0.30)';
             ctx.shadowBlur = 0;
             ctx.stroke();
             ctx.restore();
