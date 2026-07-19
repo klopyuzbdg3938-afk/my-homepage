@@ -218,22 +218,7 @@ function initAmbientCanvas() {
                 }
             }
 
-            // 4. 双圆环光晕跟随光标
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(mousePos.x, mousePos.y, 24, 0, Math.PI * 2);
-            ctx.lineWidth = 0.7;
-            ctx.strokeStyle = 'rgba(147, 197, 253, 0.38)';
-            ctx.shadowBlur = 9;
-            ctx.shadowColor = 'rgba(96, 165, 250, 0.32)';
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(mousePos.x, mousePos.y, 13, 0, Math.PI * 2);
-            ctx.lineWidth = 0.45;
-            ctx.strokeStyle = 'rgba(223, 183, 108, 0.30)';
-            ctx.shadowBlur = 0;
-            ctx.stroke();
-            ctx.restore();
+
         }
 
         // Process Gravitational Pulses (计算点击处粒子聚拢引力 - 具视差物理拉力)
