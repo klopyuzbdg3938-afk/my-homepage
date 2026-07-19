@@ -26,9 +26,10 @@ function initMouseWaterRipples() {
 }
 
 /* --------------------------------------------------------------------------
-   1. Mysterious Breathing Starfield & Fluid Water Wave Engine
-      - Circular Star Nodes (radius: 0.8px ~ 2.0px, shadowBlur: 4px glow)
-      - Dynamic Organic Water Waves (Canvas 极薄折射晶莹水丝)
+   1. Mysterious Breathing Starfield & Interactive Fluid Gravity Engine
+      - Gravitational Particle Convergence (点击周围粒子瞬时聚拢 & 漩涡引力)
+      - Starlight Splash Micro-Burst (星水爆破溅散特效)
+      - Dynamic Organic Water Waves (晶莹水波引力光环)
    -------------------------------------------------------------------------- */
 function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas');
@@ -46,13 +47,38 @@ function initAmbientCanvas() {
     });
 
     const activeWaterWaves = [];
+    const gravityPulses = [];
+    const splashParticles = [];
 
-    // Register global trigger
-    spawnCanvasWaterWave = function(x, y) {
-        // Spawn 3 concentric liquid water wave physics rings with staggered delays
-        activeWaterWaves.push({ x, y, radius: 2, maxRadius: 180, alpha: 0.45, speed: 2.8, delay: 0 });
-        activeWaterWaves.push({ x, y, radius: 0, maxRadius: 150, alpha: 0.35, speed: 2.4, delay: 5 });
-        activeWaterWaves.push({ x, y, radius: 0, maxRadius: 120, alpha: 0.25, speed: 2.0, delay: 10 });
+    // Register global click trigger
+    spawnCanvasWaterWave = function(clickX, clickY) {
+        // 1. Gravitational Pulse (引力漩涡): Pull all nearby particles within 350px toward (clickX, clickY)
+        gravityPulses.push({
+            x: clickX,
+            y: clickY,
+            radius: 350,
+            life: 25 // 25 animation frames of pull
+        });
+
+        // 2. Liquid Sparkle Splash Particles (星水爆破溅散粒子 14 颗)
+        for (let k = 0; k < 14; k++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 3.8 + 1.2;
+            splashParticles.push({
+                x: clickX,
+                y: clickY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                radius: Math.random() * 1.8 + 1.0,
+                color: Math.random() > 0.5 ? '#60A5FA' : '#DFB76C',
+                alpha: 0.95,
+                decay: Math.random() * 0.03 + 0.02
+            });
+        }
+
+        // 3. Shockwave Water Ring (灵动引力水波光环)
+        activeWaterWaves.push({ x: clickX, y: clickY, radius: 2, maxRadius: 200, alpha: 0.65, speed: 3.8, delay: 0 });
+        activeWaterWaves.push({ x: clickX, y: clickY, radius: 0, maxRadius: 160, alpha: 0.45, speed: 3.0, delay: 4 });
     };
 
     const particleCount = 210; // 210 Dual-Depth Starfield Dust & Foreground Nodes
@@ -96,13 +122,40 @@ function initAmbientCanvas() {
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, height);
 
+        // Process Gravitational Pulses (计算点击处粒子聚拢引力)
+        for (let g = gravityPulses.length - 1; g >= 0; g--) {
+            const pulse = gravityPulses[g];
+            pulse.life--;
+            if (pulse.life <= 0) {
+                gravityPulses.splice(g, 1);
+                continue;
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                const p = particles[i];
+                const dx = pulse.x - p.x;
+                const dy = pulse.y - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < pulse.radius && dist > 5) {
+                    // Inward pull acceleration towards click center
+                    const force = (1 - dist / pulse.radius) * 0.45;
+                    p.vx += (dx / dist) * force;
+                    p.vy += (dy / dist) * force;
+                    p.baseAlpha = Math.min(0.95, p.baseAlpha + 0.04);
+                }
+            }
+        }
+
         // Render Starfield Particles
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Peaceful slow drift with depth parallax
+            // Peaceful slow drift with depth parallax & gravity acceleration damping
             p.x += p.vx;
             p.y += p.vy;
+            p.vx *= 0.96;
+            p.vy *= 0.96;
 
             // Screen boundary wrapping
             if (p.x < -10) p.x = width + 10;
@@ -128,6 +181,31 @@ function initAmbientCanvas() {
             ctx.restore();
         }
 
+        // Render Starlight Splash Particles (点击微特效 星水点爆溅散)
+        for (let s = splashParticles.length - 1; s >= 0; s--) {
+            const sp = splashParticles[s];
+            sp.x += sp.vx;
+            sp.y += sp.vy;
+            sp.vx *= 0.92;
+            sp.vy *= 0.92;
+            sp.alpha -= sp.decay;
+
+            if (sp.alpha <= 0) {
+                splashParticles.splice(s, 1);
+                continue;
+            }
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, sp.alpha);
+            ctx.fillStyle = sp.color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = sp.color;
+            ctx.beginPath();
+            ctx.arc(sp.x, sp.y, sp.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
         // Render Canvas Organic Liquid Water Waves (极薄晶莹水丝)
         for (let w = activeWaterWaves.length - 1; w >= 0; w--) {
             const wave = activeWaterWaves[w];
@@ -137,7 +215,7 @@ function initAmbientCanvas() {
             }
 
             wave.radius += wave.speed;
-            wave.alpha *= 0.962; // Smooth liquid decay
+            wave.alpha *= 0.955; // Smooth liquid decay
 
             if (wave.alpha < 0.01 || wave.radius >= wave.maxRadius) {
                 activeWaterWaves.splice(w, 1);
@@ -145,22 +223,22 @@ function initAmbientCanvas() {
             }
 
             const lineProgress = wave.radius / wave.maxRadius;
-            const lineWidth = Math.max(0.3, (1 - lineProgress) * 1.1);
+            const lineWidth = Math.max(0.4, (1 - lineProgress) * 1.4);
 
             ctx.save();
             ctx.beginPath();
             ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
             ctx.lineWidth = lineWidth;
-            ctx.strokeStyle = `rgba(147, 197, 253, ${wave.alpha * 0.45})`;
-            ctx.shadowBlur = 6;
-            ctx.shadowColor = 'rgba(96, 165, 250, 0.35)';
+            ctx.strokeStyle = `rgba(147, 197, 253, ${wave.alpha * 0.6})`;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = 'rgba(96, 165, 250, 0.5)';
             ctx.stroke();
 
             // Inner subtle refraction wave
             ctx.beginPath();
-            ctx.arc(wave.x, wave.y, Math.max(0, wave.radius * 0.98 - 2), 0, Math.PI * 2);
+            ctx.arc(wave.x, wave.y, Math.max(0, wave.radius * 0.97 - 2), 0, Math.PI * 2);
             ctx.lineWidth = lineWidth * 0.6;
-            ctx.strokeStyle = `rgba(37, 99, 235, ${wave.alpha * 0.25})`;
+            ctx.strokeStyle = `rgba(223, 183, 108, ${wave.alpha * 0.4})`;
             ctx.stroke();
             ctx.restore();
         }
