@@ -11,11 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* --------------------------------------------------------------------------
-   1. High-Definition Parallel Fiber Stream Engine (Vibrant, Crisp & Orderly)
-      - 65 particles for crisp, spacious, high-visibility flow
-      - 1px ~ 1.5px thickness & 0.5 ~ 0.7 high opacity for optical fiber clarity
-      - Trail fade: rgba(0, 0, 0, 0.025) for smooth long parallel streams
-      - Vibrant Amber Gold (#FFB700) & Aurora Neon Blue (#00E5FF)
+   1. Mysterious Breathing Starfield Engine: Gold & Water Blue Twinkling Stars
+      - Circular Star Nodes (radius: 0.8px ~ 2.0px, shadowBlur: 4px glow)
+      - Independent Sine-Wave Twinkling (alpha oscillates 0.1 ~ 0.88)
+      - Peaceful slow drift (100 particles on pitch black #000000)
    -------------------------------------------------------------------------- */
 function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas');
@@ -32,76 +31,66 @@ function initAmbientCanvas() {
         height = canvas.height = window.innerHeight;
     });
 
-    const particleCount = 65; // Crisp visibility + generous negative space
+    const particleCount = 100; // 100 breathing star nodes
     const particles = [];
 
     // Vibrant Amber Gold (#FFB700) & Aurora Neon Blue (#00E5FF)
-    const goldColors = ['rgba(255, 183, 0, ', 'rgba(255, 200, 0, '];
-    const blueColors = ['rgba(0, 229, 255, ', 'rgba(56, 189, 248, '];
+    const goldColors = ['#FFB700', '#FFC800', '#FCE896'];
+    const blueColors = ['#00E5FF', '#38BDF8', '#0099FF'];
 
     for (let i = 0; i < particleCount; i++) {
         const isGold = Math.random() > 0.45;
         const colorPalette = isGold ? goldColors : blueColors;
-        const colorBase = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-        const alpha = Math.random() * 0.2 + 0.5; // Crisp high opacity 0.5 ~ 0.7
+        const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
 
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 0.5 + 1.0, // Clear 1.0px ~ 1.5px thickness
-            colorBase: colorBase,
-            alpha: alpha,
-            speed: isGold ? (Math.random() * 0.8 + 0.9) : (Math.random() * 0.6 + 0.6),
-            isGold: isGold
+            radius: Math.random() * 1.2 + 0.8, // Circular star (0.8px ~ 2.0px)
+            color: color,
+            baseAlpha: Math.random() * 0.35 + 0.35,
+            pulseSpeed: Math.random() * 0.025 + 0.008,
+            pulsePhase: Math.random() * Math.PI * 2,
+            vx: (Math.random() - 0.5) * 0.15, // Peaceful slow drift
+            vy: (Math.random() - 0.5) * 0.15 - 0.02
         });
     }
 
-    let time = 0;
-
     function render() {
         requestAnimationFrame(render);
-        time += 0.003;
 
-        // Smooth Long Trail Fade (0.025 preserves long smooth optical fiber lines)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.025)';
+        // Clear canvas with pitch black (#000000) - Clean night sky
+        ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, height);
 
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
-            // Coherent Parallel Stream Angle (15 degrees parallel sweep)
-            const angle = Math.PI * 0.12 + Math.sin(p.y * 0.0012 + time) * 0.1;
-            const vx = Math.cos(angle) * p.speed;
-            const vy = Math.sin(angle) * p.speed;
-
-            p.x += vx;
-            p.y += vy;
+            // Peaceful slow drift
+            p.x += p.vx;
+            p.y += p.vy;
 
             // Screen boundary wrapping
-            if (p.x > width + 50) {
-                p.x = -50;
-                p.y = Math.random() * height;
-            }
-            if (p.y > height + 50) {
-                p.y = -50;
-                p.x = Math.random() * width;
-            }
+            if (p.x < -10) p.x = width + 10;
+            if (p.x > width + 10) p.x = -10;
+            if (p.y < -10) p.y = height + 10;
+            if (p.y > height + 10) p.y = -10;
 
-            // Dynamic Vector Linear Gradient (Vibrant Amber Gold & Aurora Blue)
-            if (Math.abs(vx) > 0.01 && Math.abs(vy) > 0.01) {
-                const grad = ctx.createLinearGradient(p.x, p.y, p.x - vx * 14, p.y - vy * 14);
-                grad.addColorStop(0, `${p.colorBase}${p.alpha})`);
-                grad.addColorStop(0.7, `${p.colorBase}${p.alpha * 0.5})`);
-                grad.addColorStop(1, `${p.colorBase}0)`);
-                ctx.fillStyle = grad;
-            } else {
-                ctx.fillStyle = `${p.colorBase}${p.alpha})`;
-            }
+            // Asynchronous Sine-Wave Twinkling (时亮时暗 呼吸闪烁算法)
+            p.pulsePhase += p.pulseSpeed;
+            const currentAlpha = p.baseAlpha + Math.sin(p.pulsePhase) * 0.35;
+            const clampAlpha = Math.max(0.1, Math.min(0.88, currentAlpha));
 
-            // Draw crisp optical fiber node
+            // Draw glowing star node with soft shadowBlur
+            ctx.save();
+            ctx.globalAlpha = clampAlpha;
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = p.radius * 3.5;
+            ctx.shadowColor = p.color;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fill();
+            ctx.restore();
         }
     }
 
