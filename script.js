@@ -696,12 +696,18 @@ function initMobileMenu() {
     if (!toggleBtn || !drawer) return;
 
     function openDrawer() {
-        drawer.classList.add('active');
+        drawer.style.display = 'flex';
+        setTimeout(() => drawer.classList.add('active'), 10);
         document.body.style.overflow = 'hidden';
     }
 
     function closeDrawer() {
         drawer.classList.remove('active');
+        setTimeout(() => {
+            if (!drawer.classList.contains('active')) {
+                drawer.style.display = 'none';
+            }
+        }, 300);
         document.body.style.overflow = '';
     }
 
