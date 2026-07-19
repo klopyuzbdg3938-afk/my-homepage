@@ -13,37 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
 /* Global Water Wave Trigger Array for Ambient Canvas */
 let spawnCanvasWaterWave = null;
 
-/* Global Mouse Cursor Tracking & Trigger Array for Ambient Canvas */
-let spawnCanvasWaterWave = null;
-let mousePos = { x: -9999, y: -9999, active: false };
-let lastMousePos = { x: -9999, y: -9999 };
-let mouseIdleTimer = null;
-
-/* Interactive Mouse Pointer Listener (鼠标随时跟随引力 & 点击水波特效) */
+/* Interactive Mouse Water Ripple Listener (点击触发 Canvas 极简水气折射水波) */
 function initMouseWaterRipples() {
-    document.addEventListener('mousemove', (e) => {
-        // Avoid tracking inside simulator interactive game or buttons
-        if (e.target.closest('button, a, input, canvas#simulator-canvas')) {
-            mousePos.active = false;
-            return;
-        }
-
-        mousePos.x = e.clientX;
-        mousePos.y = e.clientY;
-        mousePos.active = true;
-
-        clearTimeout(mouseIdleTimer);
-        mouseIdleTimer = setTimeout(() => {
-            mousePos.active = false;
-        }, 800);
-    });
-
-    document.addEventListener('mouseleave', () => {
-        mousePos.active = false;
-    });
-
     document.addEventListener('click', (e) => {
+        // Avoid ripples on interactive buttons, links, or canvas game
         if (e.target.closest('button, a, input, canvas#simulator-canvas')) return;
+
         if (spawnCanvasWaterWave) {
             spawnCanvasWaterWave(e.clientX, e.clientY);
         }
@@ -52,7 +27,7 @@ function initMouseWaterRipples() {
 
 /* --------------------------------------------------------------------------
    1. Mysterious Breathing Starfield & Interactive Fluid Gravity Engine
-      - Mouse Motion Gravitational Attraction (鼠标移动周围粒子随时聚拢随动)
+      - Gravitational Particle Convergence (点击周围粒子瞬时聚拢 & 漩涡引力)
       - Starlight Splash Micro-Burst (星水爆破溅散特效)
       - Dynamic Organic Water Waves (晶莹水波引力光环)
    -------------------------------------------------------------------------- */
@@ -118,6 +93,11 @@ function initAmbientCanvas() {
         const isGold = Math.random() > 0.45;
         const colorPalette = isGold ? goldColors : blueColors;
 
+        // 4-Tiered 3D Depth Parallax Hierarchy:
+        // Tier 4: Dewdrop (30 particles)
+        // Tier 3: Foreground Bright Stars (70 particles)
+        // Tier 2: Midground Star Dust (120 particles)
+        // Tier 1: Deep Space Dust (140 particles)
         const isDewdrop = i >= 330;
         const isForeground = i < 70;
         const isMidground = i >= 70 && i < 190;
@@ -134,19 +114,20 @@ function initAmbientCanvas() {
             vx = 0;
             vy = Math.random() * 0.28 + 0.18;
         } else if (isForeground) {
-            radius = Math.random() * 1.3 + 1.3;
+            radius = Math.random() * 1.3 + 1.3; // 1.3px ~ 2.6px
             baseAlpha = Math.random() * 0.35 + 0.50;
             pulseSpeed = Math.random() * 0.022 + 0.01;
             vx = (Math.random() - 0.5) * 0.22;
             vy = (Math.random() - 0.5) * 0.22 - 0.01;
         } else if (isMidground) {
-            radius = Math.random() * 0.6 + 0.8;
+            radius = Math.random() * 0.6 + 0.8; // 0.8px ~ 1.4px
             baseAlpha = Math.random() * 0.25 + 0.28;
             pulseSpeed = Math.random() * 0.012 + 0.005;
             vx = (Math.random() - 0.5) * 0.10;
             vy = (Math.random() - 0.5) * 0.10;
         } else {
-            radius = Math.random() * 0.4 + 0.3;
+            // Deep Space Dust (微弱幽微远景)
+            radius = Math.random() * 0.4 + 0.3; // 0.3px ~ 0.7px
             baseAlpha = Math.random() * 0.15 + 0.08;
             pulseSpeed = Math.random() * 0.006 + 0.002;
             vx = (Math.random() - 0.5) * 0.04;
@@ -178,62 +159,6 @@ function initAmbientCanvas() {
         // Clear canvas with pitch black (#000000) - Clean night sky
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, height);
-
-        // 1. Process Continuous Mouse Hover Gravity Attraction (鼠标随时随动引力)
-        if (mousePos.active) {
-            // Spawn subtle starlight trailing droplets when cursor moves
-            const dxM = mousePos.x - lastMousePos.x;
-            const dyM = mousePos.y - lastMousePos.y;
-            const distMoved = Math.sqrt(dxM * dxM + dyM * dyM);
-
-            if (distMoved > 6 && Math.random() < 0.65) {
-                const splashColors = ['#FFF4D0', '#DFB76C', '#E5C185', '#60A5FA', '#93C5FD'];
-                splashParticles.push({
-                    x: mousePos.x + (Math.random() - 0.5) * 12,
-                    y: mousePos.y + (Math.random() - 0.5) * 12,
-                    vx: (Math.random() - 0.5) * 0.8,
-                    vy: (Math.random() - 0.5) * 0.8 + 0.15,
-                    radius: Math.random() * 1.5 + 0.8,
-                    color: splashColors[Math.floor(Math.random() * splashColors.length)],
-                    alpha: 0.85,
-                    decay: Math.random() * 0.025 + 0.015
-                });
-            }
-            lastMousePos.x = mousePos.x;
-            lastMousePos.y = mousePos.y;
-
-            for (let i = 0; i < particleCount; i++) {
-                const p = particles[i];
-                const dx = mousePos.x - p.x;
-                const dy = mousePos.y - p.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 280 && dist > 5) {
-                    const depthFactor = p.isForeground ? 0.35 : (p.isMidground ? 0.20 : 0.08);
-                    const force = (1 - dist / 280) * depthFactor;
-                    p.vx += (dx / dist) * force;
-                    p.vy += (dy / dist) * force;
-                    p.baseAlpha = Math.min(0.96, p.baseAlpha + 0.02);
-                }
-            }
-
-            // Render soft dual-ring fluid water-gold cursor tracking halo
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(mousePos.x, mousePos.y, 26, 0, Math.PI * 2);
-            ctx.lineWidth = 0.8;
-            ctx.strokeStyle = 'rgba(147, 197, 253, 0.45)';
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = 'rgba(96, 165, 250, 0.4)';
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(mousePos.x, mousePos.y, 14, 0, Math.PI * 2);
-            ctx.lineWidth = 0.5;
-            ctx.strokeStyle = 'rgba(223, 183, 108, 0.38)';
-            ctx.stroke();
-            ctx.restore();
-        }
 
         // Process Gravitational Pulses (计算点击处粒子聚拢引力 - 具视差物理拉力)
         for (let g = gravityPulses.length - 1; g >= 0; g--) {
