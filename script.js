@@ -10,37 +10,25 @@ document.addEventListener('DOMContentLoaded', () => {
     initMouseWaterRipples();
 });
 
-/* Interactive Mouse Water Ripple Listener (点击触发真水体多重同心波纹) */
+/* Global Water Wave Trigger Array for Ambient Canvas */
+let spawnCanvasWaterWave = null;
+
+/* Interactive Mouse Water Ripple Listener (点击触发 Canvas 极简水气折射水波) */
 function initMouseWaterRipples() {
     document.addEventListener('click', (e) => {
         // Avoid ripples on interactive buttons, links, or canvas game
         if (e.target.closest('button, a, input, canvas#simulator-canvas')) return;
 
-        const container = document.createElement('div');
-        container.className = 'water-ripple-container';
-        container.style.left = `${e.clientX}px`;
-        container.style.top = `${e.clientY}px`;
-
-        // Spawn 3 concentric liquid water wave rings propagating sequentially
-        for (let i = 1; i <= 3; i++) {
-            const ring = document.createElement('div');
-            ring.className = `water-ripple-ring ring-${i}`;
-            container.appendChild(ring);
+        if (spawnCanvasWaterWave) {
+            spawnCanvasWaterWave(e.clientX, e.clientY);
         }
-
-        document.body.appendChild(container);
-
-        setTimeout(() => {
-            container.remove();
-        }, 1900);
     });
 }
 
 /* --------------------------------------------------------------------------
-   1. Mysterious Breathing Starfield Engine: Gold & Water Blue Twinkling Stars
+   1. Mysterious Breathing Starfield & Fluid Water Wave Engine
       - Circular Star Nodes (radius: 0.8px ~ 2.0px, shadowBlur: 4px glow)
-      - Independent Sine-Wave Twinkling (alpha oscillates 0.1 ~ 0.88)
-      - Peaceful slow drift (100 particles on pitch black #000000)
+      - Dynamic Organic Water Waves (Canvas 极薄折射晶莹水丝)
    -------------------------------------------------------------------------- */
 function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas');
@@ -56,6 +44,16 @@ function initAmbientCanvas() {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
     });
+
+    const activeWaterWaves = [];
+
+    // Register global trigger
+    spawnCanvasWaterWave = function(x, y) {
+        // Spawn 3 concentric liquid water wave physics rings with staggered delays
+        activeWaterWaves.push({ x, y, radius: 2, maxRadius: 180, alpha: 0.45, speed: 2.8, delay: 0 });
+        activeWaterWaves.push({ x, y, radius: 0, maxRadius: 150, alpha: 0.35, speed: 2.4, delay: 5 });
+        activeWaterWaves.push({ x, y, radius: 0, maxRadius: 120, alpha: 0.25, speed: 2.0, delay: 10 });
+    };
 
     const particleCount = 210; // 210 Dual-Depth Starfield Dust & Foreground Nodes
     const particles = [];
@@ -98,6 +96,7 @@ function initAmbientCanvas() {
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, height);
 
+        // Render Starfield Particles
         for (let i = 0; i < particleCount; i++) {
             const p = particles[i];
 
@@ -126,6 +125,43 @@ function initAmbientCanvas() {
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fill();
+            ctx.restore();
+        }
+
+        // Render Canvas Organic Liquid Water Waves (极薄晶莹水丝)
+        for (let w = activeWaterWaves.length - 1; w >= 0; w--) {
+            const wave = activeWaterWaves[w];
+            if (wave.delay > 0) {
+                wave.delay--;
+                continue;
+            }
+
+            wave.radius += wave.speed;
+            wave.alpha *= 0.962; // Smooth liquid decay
+
+            if (wave.alpha < 0.01 || wave.radius >= wave.maxRadius) {
+                activeWaterWaves.splice(w, 1);
+                continue;
+            }
+
+            const lineProgress = wave.radius / wave.maxRadius;
+            const lineWidth = Math.max(0.3, (1 - lineProgress) * 1.1);
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
+            ctx.lineWidth = lineWidth;
+            ctx.strokeStyle = `rgba(147, 197, 253, ${wave.alpha * 0.45})`;
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = 'rgba(96, 165, 250, 0.35)';
+            ctx.stroke();
+
+            // Inner subtle refraction wave
+            ctx.beginPath();
+            ctx.arc(wave.x, wave.y, Math.max(0, wave.radius * 0.98 - 2), 0, Math.PI * 2);
+            ctx.lineWidth = lineWidth * 0.6;
+            ctx.strokeStyle = `rgba(37, 99, 235, ${wave.alpha * 0.25})`;
+            ctx.stroke();
             ctx.restore();
         }
     }
